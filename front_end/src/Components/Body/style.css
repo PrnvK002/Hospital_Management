@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+body{
+
+    overflow-x: hidden;
+
+}
+
+/* scroll bar customization */
+
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }  
+
+/* carousel section start */
+
+.carouselSection{
+
+    width: 95vw;
+    height: 100vh;
+    overflow-y: hidden;
+
+}
+
+/* carousel section end */
+/* card section start */
+
+.cardSection{
+
+    margin:3rem 1rem;
+    text-align: center;
+}
+
+/* card section end */

@@ -1,35 +1,29 @@
-import React from "react";
+import React,{ useState,useEffect } from "react";
 import { Navbar , Container , Nav , Offcanvas } from 'react-bootstrap';
 // import './bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const Header = () => {
+
+  const navigate = useNavigate();
+
+  const userInfo = useSelector(state => state.userLogin.data);
+  const loading = useSelector( state => state.userLogin.loading );
+  const error = useSelector(state => state.userLogin.error);
+
+  const dispatch = useDispatch();
+
+  const logout = ()=>{
+    dispatch({
+      type : 'logout'
+    })
+  }
+
   return (
     <div>
-      <Navbar bg="light" expand={false}>
-        <Container fluid>
-          <Navbar.Brand href="#">We Care</Navbar.Brand>
-          <Navbar.Toggle aria-controls="offcanvasNavbar" />
-          <Navbar.Offcanvas
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-            placement="end"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel">
-                Offcanvas
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link href="#action1">Home</Nav.Link>
-                <Nav.Link href="#action2">Link</Nav.Link>
-              
-              </Nav>
-              
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
+      
     </div>
   );
 };

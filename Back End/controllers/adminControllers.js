@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 
-import User from "../models/user.js";
+import { User } from "../models/user.js";
 
 
 //@desc for getting all patients details
@@ -9,7 +9,7 @@ import User from "../models/user.js";
 
 export const getAllUsers = asyncHandler(async (req,res)=>{
 
-    let pageLimit = 10;
+    const pageLimit = 10;
     let pageNo = req.params.page;
     let role = req.params.role;
     let skip = (pageNo - 1)*10;

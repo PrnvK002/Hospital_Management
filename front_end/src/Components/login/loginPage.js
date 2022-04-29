@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import api from "../../axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser } from "../../state/reducers/userReducer";
 
 function Login() {
   
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector(state => state.userLogin.data);
+  const loading = useSelector( state => state.userLogin.loading );
+  const error = useSelector(state => state.userLogin.error);
 
   const navigate = useNavigate();
   const [errorMessage, setError] = useState();
@@ -19,26 +25,13 @@ function Login() {
 
   const onSubmit = (data) => {
     console.log(data);
-    api
-      .post("/login", { ...data })
-      .then((response) => {
-        console.log(response);
-        if (response.data) {
-          localStorage.setItem(
-            `token+${response.data._id}`,
-            "Bearer " + response.data.authToken
-          );
-          console.log("------------Not working------------");
-          navigate("/");
-        } else {
-          console.log(response.data.error);
-          setError(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(loginUser(data));
   };
+
+  useEffect(() => {
+    userInfo ? navigate('/') : "" ;
+  }, [userInfo])
+  
 
   return (
     <div className="totalBody">

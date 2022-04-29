@@ -33,12 +33,10 @@ function Signup() {
     api
       .post("/signup", { ...data })
       .then((response) => {
-        if (response.data.success === true) {
-          localStorage.setItem(
-            `token+${response.data.userData.email}`,
-            "Bearer " + response.data.accessToken
-          );
-          navigate("/");
+        if (response.data) {
+         
+          navigate("/login");
+
         } else {
           setError(response.data.error);
         }

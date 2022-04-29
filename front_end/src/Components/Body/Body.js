@@ -3,8 +3,12 @@ import Carousel from './Carousel';
 import Card from './Cards';
 import { Row , Col , Container } from 'react-bootstrap';
 import './style.css'
+import { useSelector, useDispatch } from 'react-redux';
 
 function Body() {
+
+    
+
   return (
     <div>
         <Container>

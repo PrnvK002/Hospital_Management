@@ -4,21 +4,25 @@ import path from "path";
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import connectDB from "./config/connection.js";
-import { notFound , errorHandler } from './middlewares/errorHandler';
+import { notFound , errorHandler } from './middlewares/errorHandler.js';
+import cors from 'cors';
 
 //=============== Routes ===========================
-import adminRoutes from './routes/adminRoutes';
-import patientRoutes from './routes/patientRoutes';
-import staffRoutes from './routes/staffRoutes';
-import doctorRoutes from './routes/doctorRoutes';
+import adminRoutes from './routes/adminRoutes.js';
+import patientRoutes from './routes/patientRoutes.js';
+import staffRoutes from './routes/staffRoutes.js';
+import doctorRoutes from './routes/doctorRoutes.js';
 
 //=================== environment variable setup ============================
-dotenv.config();
+dotenv.config({ path : '.env' });
 
 //================== Mongodb server connection ==============================
 connectDB();
 
 const app = express();
+
+//=========== Cors =================
+app.use(cors({ origin : "*" }));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -2,11 +2,10 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import generateToken from "../util/generateToken.js";
 // Models
-import User from "../models/user.js";
+import { User } from "../models/user.js";
 
 //========= Validator ==========
 import {
-  singupSchema,
   loginSchema,
   signupSchema,
 } from "../validation/validation.js";
@@ -61,10 +60,10 @@ export const registerUser = asyncHandler(async (req, res) => {
   try {
     const result = await signupSchema.validateAsync(req.body);
 
-    let user = await User.findOne({ email: email });
+    let user = await User.findOne({ email: req.body.email });
     if (user) {
       res.status(400);
-      throw new Error(`${email} is already in use `);
+      throw new Error(`${req.body.email} is already in use `);
     }
     let ecrypted = await bcrypt.hash(req.body.password, 10);
     let status = await User.create({
@@ -76,7 +75,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       age: req.body.age,
     });
 
-    if (status.acknowledged) {
+    if (status) {
       res.status(201).json({ message: " User successfully created " });
     } else {
       res.status(400);

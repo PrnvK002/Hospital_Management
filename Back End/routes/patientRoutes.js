@@ -14,3 +14,4 @@ router.post('/login',authLogin);
 
 router.post('/signup',registerUser);
 
+export default router;

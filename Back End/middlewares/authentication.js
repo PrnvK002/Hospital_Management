@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import {User} from "../models/user.js";
 
 const authenticationMiddleware = async (req, res) => {
   if (
@@ -21,3 +21,5 @@ const authenticationMiddleware = async (req, res) => {
     }
   }
 };  
+
+export default authenticationMiddleware;

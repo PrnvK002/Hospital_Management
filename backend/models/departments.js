@@ -4,15 +4,19 @@ const Schema = mongoose.Schema;
 
 const departmentSchema = new Schema({
     departmentName : {
-        type : "String",
+        type : String,
         required : true
     },
-    doctors : {
-        type : "Number"
-    }
-    ,
+    description : {
+        type : String,
+        required : true
+    },
+    image : {
+        type : String,
+        required : true
+    },
     rating : {
-        type : "Number",
+        type : Number,
     }
 })
 

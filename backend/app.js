@@ -1,20 +1,22 @@
 import express from "express";
 import logger from "morgan";
 import bodyParser from 'body-parser';
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import connectDB from "./config/connection.js";
 import { notFound , errorHandler } from './middlewares/errorHandler.js';
 import cors from 'cors';
+
+//=================== environment variable setup ============================
+//put it about routes
+// dotenv.config({ path : './.env' });
+// console.log(process.env);
 
 //=============== Routes ===========================
 import adminRoutes from './routes/adminRoutes.js';
 import patientRoutes from './routes/patientRoutes.js';
 import staffRoutes from './routes/staffRoutes.js';
 import doctorRoutes from './routes/doctorRoutes.js';
-
-//=================== environment variable setup ============================
-dotenv.config({ path : '.env' });
-
+import uploadRoute from './routes/uploadRoute.js'
 //================== Mongodb server connection ==============================
 connectDB();
 
@@ -38,6 +40,7 @@ app.use('/',patientRoutes);
 app.use('/admin',adminRoutes);
 app.use('/staff',staffRoutes);
 app.use('/doctor',doctorRoutes);
+app.use('/uploads',uploadRoute);
 
 
 //====================== Error handling middleware ==========================

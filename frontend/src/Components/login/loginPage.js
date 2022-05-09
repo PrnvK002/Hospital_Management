@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../state/reducers/userReducer";
 import { GoogleLogin } from "react-google-login";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import Loader from "../Loading/loader";
+import LoginImage from "../../Assets/background/login_side.svg";
 
 function Login() {
   const dispatch = useDispatch();
@@ -54,22 +55,19 @@ function Login() {
 
   //================ redirecting to home page ============
   useEffect(() => {
-    
-    if(Object.keys(userInfo).length !== 0 ){
-      navigate('/');
+    if (Object.keys(userInfo).length !== 0) {
+      navigate("/");
     }
-  }, [userInfo])
-  
+  }, [navigate, userInfo]);
 
   return (
-    <div className="totalBody">
-      <div className="boxLogin">
+    <>
+      <Container>
+        {/* loading setup start */}
 
-      {/* loading setup start */}
+        {loading && <Loader />}
 
-      { loading && <Loader /> }
-
-      {/* loading setup start */}
+        {/* loading setup start */}
 
         {/* React Modal Setup start */}
 
@@ -104,81 +102,89 @@ function Login() {
         </Modal>
 
         {/* React Modal Setup end */}
+        <Row className = " mt-5 ">
+          <Col className="text-center">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <h1 style={{ color : "#4D4C7D" }}  > Check In </h1>
+              <div className="">
+                {error && (
+                  <p style={{ color: "red", fontSize: "0.8rem" }}>{error}</p>
+                )}
+                {errorMessage && (
+                  <p style={{ color: "red", fontSize: "0.8rem" }}>
+                    {errorMessage}
+                  </p>
+                )}
+                {errors.email && (
+                  <p style={{ color: "red", fontSize: "0.8rem" }}>
+                    {errors.email.message}
+                  </p>
+                )}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <h1> Login Form </h1>
-          <div className="input">
-            {error && (
-              <p style={{ color: "red", fontSize: "0.8rem" }}>{error}</p>
-            )}
-            {errorMessage && (
-              <p style={{ color: "red", fontSize: "0.8rem" }}>{errorMessage}</p>
-            )}
-            {errors.email && (
-              <p style={{ color: "red", fontSize: "0.8rem" }}>
-                {errors.email.message}
-              </p>
-            )}
+                <input
+                  type="email"
+                  className="inputLogin mt-3"
+                  placeholder="Enter your email Address"
+                  name="email"
+                  {...register("email", {
+                    required: "email must be filled",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "invalid email address",
+                    },
+                  })}
+                />
 
-            <input
-              type="email"
-              className="inputLogin"
-              placeholder="Enter your email Address"
-              name="email"
-              {...register("email", {
-                required: "email must be filled",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "invalid email address",
-                },
-              })}
-            />
+                {errors.password && (
+                  <p style={{ color: "red", fontSize: "0.8rem" }}>
+                    {errors.password.message}
+                  </p>
+                )}
 
-            {errors.password && (
-              <p style={{ color: "red", fontSize: "0.8rem" }}>
-                {errors.password.message}
-              </p>
-            )}
+                <input
+                  type="password"
+                  className="inputLogin m-3"
+                  placeholder="Enter the password"
+                  name="password"
+                  {...register("password", {
+                    required: "password must be filled",
+                    minLength: {
+                      value: 6,
+                      message: "Password must contain atlest 6 characters",
+                    },
+                  })}
+                />
+              </div>
 
-            <input
-              type="password"
-              className="inputLogin"
-              placeholder="Enter the password"
-              name="password"
-              {...register("password", {
-                required: "password must be filled",
-                minLength: {
-                  value: 6,
-                  message: "Password must contain atlest 6 characters",
-                },
-              })}
-            />
-          </div>
-
-          <div className="submit">
-            <button type="submit" className="submitButton">
-              {" "}
-              Login{" "}
-            </button>
-            <p
-              onClick={() => {
-                navigate("/signup");
-              }}
-              style={{ fontSize: "0.8rem", cursor: "pointer" }}
-            >
-              Don't Have an Account ? Signup Now
-            </p>
-            <GoogleLogin
-              clientId="511456651501-fugmj6urs7bl4j0k02e6lcsvhkn16g8b.apps.googleusercontent.com"
-              buttonText="Login with google"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-            />
-          </div>
-        </form>
-      </div>
-    </div>
+              <div className="submit">
+                <button type="submit" style={{backgroundColor:"#4D4C7D"}} className="submitButton">
+                  {" "}
+                  Login{" "}
+                </button>
+                <p
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                  style={{ fontSize: "0.8rem", cursor: "pointer" }}
+                >
+                  Don't Have an Account ? Signup Now
+                </p>
+                <GoogleLogin
+                  clientId="511456651501-fugmj6urs7bl4j0k02e6lcsvhkn16g8b.apps.googleusercontent.com"
+                  buttonText="Login with google"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={"single_host_origin"}
+                />
+              </div>
+            </form>
+          </Col>
+          <Col className="d-sm-none d-md-block">
+            <img src={LoginImage} alt="loading...." width="90%" />
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 }
 

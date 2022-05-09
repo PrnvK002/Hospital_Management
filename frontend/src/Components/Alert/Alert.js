@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-bootstrap';
 
-function Alert({ variant , message }) {
+function AlertMessage({ variant , message }) {
 
     const [ show , setShow] = useState(true);
 
@@ -16,4 +16,4 @@ function Alert({ variant , message }) {
   )
 }
 
-export default Alert
+export default AlertMessage;

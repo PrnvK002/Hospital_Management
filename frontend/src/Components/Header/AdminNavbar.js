@@ -6,12 +6,13 @@ import { Container , Nav , Navbar } from "react-bootstrap";
 function AdminNavbar() {
 
   return (
-    <Navbar bg="primary" variant="dark">
+    <Navbar style={{background : "#363062"}}>
       <Container>
         <Nav className="mx-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="#features">User management</Nav.Link>
-          <Nav.Link href="#pricing">Services</Nav.Link>
+          <Nav.Link className="text-white" href="/">Home</Nav.Link>
+          <Nav.Link className="text-white" href="/admin/users">User management</Nav.Link>
+          <Nav.Link className="text-white" href="/admin/departments">Departments</Nav.Link>
+          <Nav.Link className="text-white" href="/admin/services">Services</Nav.Link>
         </Nav>
       </Container>
     </Navbar>

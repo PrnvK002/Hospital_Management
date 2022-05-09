@@ -7,6 +7,9 @@ import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/signupPage";
 import UserManagement from "./Pages/userManagement";
+import AddUser from "./Pages/addUser";
+import Departments from "./Pages/Departments";
+import AddDepartment from "./Pages/AddDepartment";
 //============== PAGES END ======================
 //=============== COMPONENTS ===================
 import Header from "./Components/Header/Header";
@@ -25,6 +28,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/admin/users" element={<UserManagement />} />
+            <Route path="/admin/addUser" element={<AddUser />} />
+            <Route path="/admin/departments" element={<Departments />} />
+            <Route path="/admin/addDepartment" element={<AddDepartment />} />
           </Routes>
         </Container>
       </main>

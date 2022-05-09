@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import DoctorNavbar from "./DoctorNavbar";
 import PatientNavbar from "./PatientNavbar";
 import StaffNavbar from "./StaffNavbar";
+import AdminNavbar from "./AdminNavbar";
 import Topbar from './Topbar';
 
 const Header = () => {
@@ -19,6 +20,8 @@ const Header = () => {
      <PatientNavbar /> :
      userInfo.role === "doctor" ? 
      <DoctorNavbar /> :
+     userInfo.role === "admin" ? 
+     <AdminNavbar /> :
      <StaffNavbar />
   }
     </>

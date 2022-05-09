@@ -2,18 +2,21 @@ import React from "react";
 import { Card , Button } from 'react-bootstrap';
 
 
-function Cards() {
+function Cards({ departmentName , description ,image , rating }) {
+
   return (
     <div>
-      <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
+      <Card style={{ width: "14rem",height:"22rem"}} className="align-items-center" >
+        <Card.Img variant="top" src={image} style={{ width : "10rem" , height : "10rem" }} />
         <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+          <Card.Title>{departmentName}</Card.Title>
+          <Card.Text style={{ fontSize : "14px" }}>
+            {description}
           </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
+          <Card.Text>
+            {rating}
+          </Card.Text>
+          <Button variant="primary">Book an Appointment</Button>
         </Card.Body>
       </Card>
     </div>

@@ -1,9 +1,7 @@
-
 import twilio from 'twilio';
-const accountSid = process.env.TWILIO_ACCOUNT_SID || 'AC0d871c77995f0cdeee8da13b141be9df';
-const authToken = process.env.TWILIO_AUTH_TOKEN || 'c26cbabd71eeb7ef495c6f0476866bdb' ;
+import { TWILIO_ACCOUNT_SID , TWILIO_AUTH_TOKEN } from '../config/global.js'
 
-let client = twilio(accountSid,authToken);
+let client = twilio(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN);
 
 function sendSms(to,otp){
 
@@ -12,9 +10,10 @@ client.messages
      body: `This is the messge from WeCare hospitals 
      your otp for verification is ${otp}`,
      from: '+16203180271',
-     to: to
+     to: `+91${to}`
    })
-  .then(message => console.log( 'message sent', message.sid));
+  .then(message => console.log( 'message sent', message.sid))
+  .catch((err) => { console.log(err); });
 
 }
 

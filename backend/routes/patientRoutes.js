@@ -4,7 +4,8 @@ import authentication from '../middlewares/authentication.js';
 // import { authLogin , registerUser , sendOtp , homePage , getDoctors , fixingAppointment } from '../controllers/patientControllers.js';
 import { authLogin,registerUser,sendOtp,getDoctors } from '../controllers/userController.js';
 import { homePage } from '../controllers/departmentController.js';
-import { fixingAppointment } from '../controllers/appointmentController.js';
+import { fixingAppointment,getAppointmentHistory } from '../controllers/appointmentController.js';
+import authenticationMiddleware from '../middlewares/authentication.js';
 
 //@desc route for login permision
 //@access public
@@ -31,13 +32,20 @@ router.get('/',homePage);
 //@access public 
 //@route get /getDoctors/:department Id
 
-router.get('/getDoctors/:id',getDoctors);
+router.get('/getDoctors/:id',authenticationMiddleware,getDoctors);
 
 //@desc fix an appointment
 //@access public 
 //@route post /appointment
 
 router.post('/appointment',authentication,fixingAppointment);
+
+//@desc get appointment history
+//@access public 
+//@route get /appointmentHistory
+
+router.get('/appointmentHistory',authenticationMiddleware,getAppointmentHistory);
+
 
 
 export default router;

@@ -46,6 +46,12 @@ const userSchema = new Schema(
     },
     age : {
       type : Number
+    },
+    workSift : {
+      type : String
+    },
+    qualification : {
+      type : String
     }
   },
   { timestamps: true }

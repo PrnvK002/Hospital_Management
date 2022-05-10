@@ -1,11 +1,15 @@
 import React from "react";
 import { Card , Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 
-function Cards({ departmentName , description ,image , rating }) {
+
+function Cards({ _id , departmentName , description ,image , rating }) {
+
+  const navigate = useNavigate();
 
   return (
-    <div>
+    <>
       <Card style={{ width: "14rem",height:"22rem"}} className="align-items-center" >
         <Card.Img variant="top" src={image} style={{ width : "10rem" , height : "10rem" }} />
         <Card.Body>
@@ -16,10 +20,10 @@ function Cards({ departmentName , description ,image , rating }) {
           <Card.Text>
             {rating}
           </Card.Text>
-          <Button variant="primary">Book an Appointment</Button>
+          <Button variant="primary" onClick = { ()=>{ navigate(`/bookAppointment/${_id}/${departmentName}`); } } >Book Appointment</Button>
         </Card.Body>
       </Card>
-    </div>
+    </>
   );
 }
 

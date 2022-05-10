@@ -186,7 +186,7 @@ export const addUser = asyncHandler(async (req, res) => {
   console.log(req.body);
   const ecrypted = await bcrypt.hash(req.body.password, 10);
 
-  const status = await User.create({
+  const user = new User({
     email: req.body.email,
     user_name: req.body.username,
     password: ecrypted,
@@ -196,10 +196,14 @@ export const addUser = asyncHandler(async (req, res) => {
     role: req.body.role,
     salary: Number(req.body.salary),
     department: req.body.department,
+    qualification : req.body.qualification,
+    workShift : req.body.workShift
   });
 
+  const status = await user.save();
+
   if (status) {
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({ status });
   } else {
     console.log(status);
     res.status(500);

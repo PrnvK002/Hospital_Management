@@ -52,3 +52,17 @@ export const fixingAppointment = asyncHandler(async (req, res) => {
     throw new Error("Cannot fix appointment right now try some other time");
   }
 });
+
+//@desc get appointment history
+//@access public
+//@route get /appointmentHistory
+
+export const getAppointmentHistory = asyncHandler(async (req, res) => {
+  const appointments = await Appointment.find({ user_id: req.user._id });
+  if (appointments) {
+    res.status(200).json({ appointments });
+  } else {
+    res.status(404);
+    throw new Error("Cannot get appointment History");
+  }
+});

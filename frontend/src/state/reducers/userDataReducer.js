@@ -5,9 +5,10 @@ import Axios from "../../axios";
 
 export const getUsersData = createAsyncThunk(
   "admin/users",
-  async (conditions) => {
+  async (conditions, { getState }) => {
     const { role, page } = conditions;
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const state = getState();
+    const userInfo = state.userLogin.data;
     const response = await Axios.get(`/admin/users/${role}/${page}`, {
       headers: {
         authorization: `Bearer ${userInfo.authToken}`,
@@ -22,12 +23,30 @@ export const getUsersData = createAsyncThunk(
 export const addUserData = createAsyncThunk(
   "admin/users/add",
   async (data, { getState }) => {
+    console.log(data);
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.post("/admin/addUser", data, {
-      header: { authorization: `Bearer ${userInfo.authToken}` },
+      headers: {
+        authorization: `Bearer ${userInfo.authToken}`,
+        "Content-Type": "application/json",
+      },
     });
     console.log(response);
+    return response.data.status;
+  }
+);
+
+//=================== getting doctors of a specific departments ======================
+
+export const getDoctorsOfDepartments = createAsyncThunk(
+  "users/department",
+  async (id, { getState }) => {
+    const state = getState();
+    const userInfo = state.userLogin.data;
+    const response = await Axios.get(`/getDoctors/${id}`, {
+      headers: { authorization: `Bearer ${userInfo.authToken}` },
+    });
     return response.data;
   }
 );
@@ -46,6 +65,12 @@ const usersDataReducer = createSlice({
     data: usersDataFromStorage,
     loading: false,
     error: "",
+    dataChanged: false,
+  },
+  reducers: {
+    setDataChange: (state) => {
+      state.dataChanged = false;
+    },
   },
   extraReducers: {
     [getUsersData.fulfilled]: (state, action) => {
@@ -64,7 +89,8 @@ const usersDataReducer = createSlice({
     },
     [addUserData.fulfilled]: (state, action) => {
       console.log(action);
-      state.data = action.payload;
+      state.dataChanged = true;
+      state.data.push(action.payload);
       state.loading = false;
       state.error = "";
     },
@@ -77,6 +103,18 @@ const usersDataReducer = createSlice({
       state.loading = false;
       state.error = "An error occured while addUser";
     },
+    [getDoctorsOfDepartments.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+      state.dataChanged = true;
+    },
+    [getDoctorsOfDepartments.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getDoctorsOfDepartments.rejected]: (state, action) => {
+      state.error = "Cannot get doctors data";
+      state.loading = false;
+    },
     logout: (state, action) => {
       state.data = [];
       localStorage.removeItem("usersData");
@@ -85,6 +123,10 @@ const usersDataReducer = createSlice({
     },
   },
 });
+
+//====================== actions =========================
+
+export const { setDataChange } = usersDataReducer.actions;
 
 //====================== Exporting as reducer ===========================
 

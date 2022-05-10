@@ -1,9 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../axios";
 
-export const getMoreInfo = createAsyncThunk("moreInfo", async (id) => {
-  const response = await Axios.get(`/admin/user/${id}`);
-  return response.data;
+export const getMoreInfo = createAsyncThunk("moreInfo", async (id,{getState}) => {
+  console.log(id);
+  const state = getState();
+  const userInfo = state.userLogin.data;
+  const response = await Axios.get(`/admin/user/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+  console.log(response);
+  return response.data.user;
 });
 
 const moreInfo = createSlice({
@@ -15,6 +19,7 @@ const moreInfo = createSlice({
   },
   extraReducers: {
     [getMoreInfo.fulfilled]: (state, action) => {
+      
       state.data = action.payload;
       state.loading = false;
       state.error = "";

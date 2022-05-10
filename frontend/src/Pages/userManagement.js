@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersData } from "../state/reducers/userDataReducer";
+import { getUsersData, setDataChange } from "../state/reducers/userDataReducer";
 import AlertMessage from "../Components/Alert/Alert";
 import {
   Dropdown,
@@ -12,11 +12,11 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loading/loader";
 import moreInfo, { getMoreInfo } from "../state/reducers/moreInfo";
 import Axios from "../axios";
 import Loading from "../Components/Loading/loader";
-import { useNavigate } from "react-router-dom";
 
 function UserManagement() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function UserManagement() {
   };
 
   useEffect(() => {
-    console.log("use Effect working");
+    dispatch(setDataChange());
     dispatch(getUsersData({ role, page }));
   }, [role, page, dispatch]);
 
@@ -53,6 +53,7 @@ function UserManagement() {
   const getInfo = (id) => {
     dispatch(getMoreInfo(id));
     handleShow();
+    console.log(moreUserInfo);
   };
 
   //================ Modal setup ===================
@@ -127,14 +128,14 @@ function UserManagement() {
           {moreInfoError && <p>{moreInfoError}</p>}
           {Object.keys(moreUserInfo).length > 0 ? (
             <div>
-              <p> {moreInfo.user_name} </p>
-              <p> {moreInfo.email} </p>
-              <p> {moreInfo.phone} </p>
-              <p> {moreInfo.role} </p>
-              <p> {moreInfo.age} </p>
-              <p>User from : {moreInfo.createdAt} </p>
-              <p> {moreInfo.department ? moreInfo.department : ""} </p>
-              <p> {moreInfo.salary ? moreInfo.salary : ""} </p>
+              <p> {moreUserInfo.user_name} </p>
+              <p> {moreUserInfo.email} </p>
+              <p> {moreUserInfo.phone} </p>
+              <p> {moreUserInfo.role} </p>
+              <p> {moreUserInfo.age} </p>
+              <p>User from : {moreUserInfo.createdAt} </p>
+              <p> {moreUserInfo.department ? moreUserInfo.department : ""} </p>
+              <p> {moreUserInfo.salary ? moreUserInfo.salary : ""} </p>
             </div>
           ) : (
             ""

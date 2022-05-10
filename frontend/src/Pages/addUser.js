@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Col,
@@ -7,17 +7,18 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Alert from "../Components/Alert/Alert";
 import Loading from "../Components/Loading/loader";
-import { addUserData } from "../state/reducers/userDataReducer";
+import { addUserData, setDataChange } from "../state/reducers/userDataReducer";
 
 function AddUser() {
   const departmentData = useSelector((state) => state.departmentData);
-  const { departments , loading , error } = departmentData;
-  const [ success , setSuccess ] = useState(false);
+  const userData = useSelector((state) => state.userData);
+  const { loading, error, dataChanged } = userData;
+  const { departments } = departmentData;
   const navigate = useNavigate();
   //====================== Validation ===========================
   const {
@@ -29,23 +30,28 @@ function AddUser() {
   //======================== Data submission ===================
   const dispatch = useDispatch();
   const onSubmit = async (data) => {
-    console.log(data);
     dispatch(addUserData(data));
-    setSuccess(true);
-    // if(!loading && departments ){
-    //   navigate('/admin/users');
-    // }
   };
 
-  let props = { vaiant: "success", message: "Successfully added user" };
+  //==================== Success Props =========================
+
+  const props = { vaiant: "success", message: "Successfully added user" };
+
+  //========================= Redirecting to users ===============
+  useEffect(() => {
+    if (dataChanged === true) {
+      dispatch(setDataChange());
+      navigate("/admin/users");
+    }
+  }, [navigate, dataChanged, dispatch]);
 
   return (
     <>
-      <Container>
+      <Container className="w-50">
         <h3 className="text-center" style={{ color: "#4D4C7D" }}>
           ADD USER
         </h3>
-        {success && <Alert {...props} />}
+        {dataChanged && <Alert {...props} />}
         {loading && <Loading />}
         <div>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -152,11 +158,7 @@ function AddUser() {
                   {errors.salary.message}
                 </p>
               )}
-              {errors.department && (
-                <p style={{ color: "red", fontSize: "0.8rem" }}>
-                  {errors.department.message}
-                </p>
-              )}
+              
               <Col md>
                 <FloatingLabel controlId="floatingInput" label="Age">
                   <Form.Control
@@ -189,6 +191,21 @@ function AddUser() {
               </Col>
             </Row>
             <Row className="g-2">
+            {errors.gender && (
+                <p style={{ color: "red", fontSize: "0.8rem" }}>
+                  {errors.gender.message}
+                </p>
+              )}
+              {errors.role && (
+                <p style={{ color: "red", fontSize: "0.8rem" }}>
+                  {errors.role.message}
+                </p>
+              )}
+              {errors.department && (
+                <p style={{ color: "red", fontSize: "0.8rem" }}>
+                  {errors.department.message}
+                </p>
+              )}
               <Col md>
                 <FloatingLabel controlId="floatingSelectGrid" label="Gender">
                   <Form.Select
@@ -245,7 +262,27 @@ function AddUser() {
                 </FloatingLabel>
               </Col>
             </Row>
-
+            <Row className="g-2 mt-3">
+              
+              <Col md>
+                <FloatingLabel controlId="floatingInput" label="Qualification">
+                  <Form.Control
+                    type="text"
+                    placeholder="Qualification"
+                    {...register("qualification")}
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col md>
+                <FloatingLabel controlId="floatingInput" label="Workshift">
+                  <Form.Control
+                    type="text"
+                    placeholder="Work Shift"
+                    {...register("workshift")}
+                  />
+                </FloatingLabel>
+              </Col>
+            </Row>
             <Button type="submit" className="my-3 w-100">
               Submit
             </Button>

@@ -10,8 +10,8 @@ import UserManagement from "./Pages/userManagement";
 import AddUser from "./Pages/addUser";
 import Departments from "./Pages/Departments";
 import AddDepartment from "./Pages/AddDepartment";
-// import BookAppointment from "./Pages/BookAppointment";
-// import ConfirmAppointment from "./Pages/ConfirmAppointment";
+import BookAppointment from "./Pages/BookAppointment";
+import ConfirmAppointment from "./Pages/ConfirmAppointment";
 //============== PAGES END ======================
 //=============== COMPONENTS ===================
 import Header from "./Components/Header/Header";
@@ -33,8 +33,8 @@ function App() {
             <Route path="/admin/addUser" element={<AddUser />} />
             <Route path="/admin/departments" element={<Departments />} />
             <Route path="/admin/addDepartment" element={<AddDepartment />} />
-            {/* <Route path="/bookAppointment/:id/:departmentName" element={<BookAppointment />} />
-            <Route path="/confirmAppointment/:id" element={<ConfirmAppointment />} /> */}
+            <Route path="/bookAppointment/:id/:departmentName" element={<BookAppointment />} />
+            <Route path="/confirmAppointment/:id" element={<ConfirmAppointment />} />
             
           </Routes>
         </Container>

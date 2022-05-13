@@ -4,7 +4,7 @@ import authentication from '../middlewares/authentication.js';
 // import { authLogin , registerUser , sendOtp , homePage , getDoctors , fixingAppointment } from '../controllers/patientControllers.js';
 import { authLogin,registerUser,sendOtp,getDoctors } from '../controllers/userController.js';
 import { homePage } from '../controllers/departmentController.js';
-import { fixingAppointment,getAppointmentHistory } from '../controllers/appointmentController.js';
+import { fixingAppointment , getAppointmentHistory , getActiveBooking } from '../controllers/appointmentController.js';
 import authenticationMiddleware from '../middlewares/authentication.js';
 
 //@desc route for login permision
@@ -46,6 +46,10 @@ router.post('/appointment',authentication,fixingAppointment);
 
 router.get('/appointmentHistory',authenticationMiddleware,getAppointmentHistory);
 
+//@desc get currently active appointments
+//@access public 
+//@route get /appointment
 
+router.get('/appointment',authenticationMiddleware,getActiveBooking);
 
 export default router;

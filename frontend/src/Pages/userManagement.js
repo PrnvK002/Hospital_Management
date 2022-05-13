@@ -7,16 +7,16 @@ import {
   DropdownButton,
   Pagination,
   Table,
-  Modal,
   Button,
   Row,
   Col,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loading/loader";
-import moreInfo, { getMoreInfo } from "../state/reducers/moreInfo";
+import { getMoreInfo } from "../state/reducers/moreInfo";
 import Axios from "../axios";
-import Loading from "../Components/Loading/loader";
+import Confirm from "../Components/Modal/Confirm";
+import MoreInfoModal from "../Components/Modal/MoreInfoModal";
 
 function UserManagement() {
   const navigate = useNavigate();
@@ -46,14 +46,11 @@ function UserManagement() {
 
   //=========== Getting more user specific data ========
 
-  const moreUserInfo = useSelector((state) => state.moreInfo.data);
-  const moreInfoLoading = useSelector((state) => state.moreInfo.loading);
-  const moreInfoError = useSelector((state) => state.moreInfo.error);
+  const moreUserData = useSelector((state) => state.moreInfo);
 
   const getInfo = (id) => {
     dispatch(getMoreInfo(id));
     handleShow();
-    console.log(moreUserInfo);
   };
 
   //================ Modal setup ===================
@@ -85,6 +82,17 @@ function UserManagement() {
     }
   };
 
+  //================= confirm props ==============
+  const confirmProps = {
+    confirm,
+    hideConfirm,
+    confirmAction: blockUser,
+    removal: "user",
+    action: "block",
+  };
+  //============== more info props =============
+  const moreInfoProps = { show, handleClose, showConfirm, moreUserData };
+
   //==================== End =============================
 
   return (
@@ -106,73 +114,24 @@ function UserManagement() {
             <DropdownButton
               id="dropdown-basic-button"
               title="Change Role"
-              onSelect ={ changeRole }
+              onSelect={changeRole}
             >
-              <Dropdown.Item eventKey="patient" >Patients</Dropdown.Item>
-              <Dropdown.Item eventKey="doctor" >Doctors</Dropdown.Item>
-              <Dropdown.Item eventKey="staff" >Staffs</Dropdown.Item>
+              <Dropdown.Item eventKey="patient">Patients</Dropdown.Item>
+              <Dropdown.Item eventKey="doctor">Doctors</Dropdown.Item>
+              <Dropdown.Item eventKey="staff">Staffs</Dropdown.Item>
             </DropdownButton>
           </div>
         </Col>
         {error && <AlertMessage {...props} />}
         {loading && <Loader />}
       </Row>
-      {/* Modal set-up start */}
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>More Info</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {moreInfoLoading && <Loading />}
-          {moreInfoError && <p>{moreInfoError}</p>}
-          {Object.keys(moreUserInfo).length > 0 ? (
-            <div>
-              <p> {moreUserInfo.user_name} </p>
-              <p> {moreUserInfo.email} </p>
-              <p> {moreUserInfo.phone} </p>
-              <p> {moreUserInfo.role} </p>
-              <p> {moreUserInfo.age} </p>
-              <p>User from : {moreUserInfo.createdAt} </p>
-              <p> {moreUserInfo.department ? moreUserInfo.department : ""} </p>
-              <p> {moreUserInfo.salary ? moreUserInfo.salary : ""} </p>
-            </div>
-          ) : (
-            ""
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              showConfirm(moreInfo._id, moreInfo.isBlocked);
-            }}
-          >
-            {moreInfo.isBlocked ? "Unblock" : "Block"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {/* Modal set-up end */}
-
+      {/* More info modal start */}
+      {show ? <MoreInfoModal {...moreInfoProps} /> : ""}
+      {/* More info modal end */}
       {/* confirm modal set up start */}
 
-      <Modal show={confirm} onHide={hideConfirm} animation={true}>
-        <Modal.Header closeButton>
-          <Modal.Title>Alert</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure want to remove this department ? </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={hideConfirm}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={blockUser}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {confirm ? <Confirm {...confirmProps} /> : ""}
 
       {/* confirm modal set up end */}
 
@@ -209,7 +168,9 @@ function UserManagement() {
                 ) : (
                   <>
                     <td>{data.salary}</td>
-                    <td>{ data.department ? data.department.departmentName : "" }</td>
+                    <td>
+                      {data.department ? data.department.departmentName : ""}
+                    </td>
                   </>
                 )}
                 <td>

@@ -96,7 +96,6 @@ const usersDataReducer = createSlice({
     },
     [addUserData.pending]: (state, action) => {
       state.loading = true;
-      console.log(action);
     },
     [addUserData.rejected]: (state, action) => {
       console.error(action);

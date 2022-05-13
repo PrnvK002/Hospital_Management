@@ -1,12 +1,22 @@
 import React from "react";
 import { Card , Button } from 'react-bootstrap';
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 
 
-function Cards({ _id , departmentName , description ,image , rating }) {
+function Cards({ _id , departmentName , description ,image , rating , setError }) {
+
 
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.userLogin.data);
+  const bookAppointmentButton = () =>{ 
+    if(Object.keys(userInfo).length > 0){
+      navigate(`/bookAppointment/${_id}/${departmentName}`);
+    }else{
+      setError('User Not logged in please login to book appointments');
+    }
+   }
 
   return (
     <>
@@ -20,7 +30,7 @@ function Cards({ _id , departmentName , description ,image , rating }) {
           <Card.Text>
             {rating}
           </Card.Text>
-          <Button variant="primary" onClick = { ()=>{ navigate(`/bookAppointment/${_id}/${departmentName}`); } } >Book Appointment</Button>
+          <Button variant="primary" onClick = { bookAppointmentButton } >Book Appointment</Button>
         </Card.Body>
       </Card>
     </>

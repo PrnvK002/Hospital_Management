@@ -17,7 +17,6 @@ function Login() {
   const error = useSelector((state) => state.userLogin.error);
 
   const navigate = useNavigate();
-  const [errorMessage, setError] = useState();
 
   const [userData, setUserData] = useState({});
 
@@ -109,11 +108,6 @@ function Login() {
               <div className="">
                 {error && (
                   <p style={{ color: "red", fontSize: "0.8rem" }}>{error}</p>
-                )}
-                {errorMessage && (
-                  <p style={{ color: "red", fontSize: "0.8rem" }}>
-                    {errorMessage}
-                  </p>
                 )}
                 {errors.email && (
                   <p style={{ color: "red", fontSize: "0.8rem" }}>

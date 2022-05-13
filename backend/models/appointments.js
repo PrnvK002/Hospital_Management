@@ -18,6 +18,18 @@ const appointmentSchema = new Schema(
       type: Number,
       required: true,
     },
+    paymentDetails : {
+      type : Object,
+      required : true
+    },
+    date : {
+      type : Date,
+      required : true
+    },
+    status : {
+      type : String,
+      default : 'active'
+    }
   },
   { timestamps: true }
 );

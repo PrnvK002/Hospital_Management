@@ -7,8 +7,9 @@ import {
 } from "../state/reducers/departmentReducer";
 import AlertMessage from "../Components/Alert/Alert";
 import Loader from "../Components/Loading/loader";
-import { Button, Col, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, Row, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Confirm from '../Components/Modal/Confirm';
 
 function Departments() {
   const navigate = useNavigate();
@@ -48,13 +49,15 @@ function Departments() {
     dispatch(removeDepartment(Id));
   };
 
+  const confirmProps = { confirm , hideConfirm , confirmAction : confirmRemoval , removal : "department" , action:"remove" }
+
   return (
     <>
       {error && <AlertMessage {...errorProps} />}
       {loading && <Loader />}
       <Row className="text-center mb-3">
         <Col md>
-          <h3> Departments </h3>
+          <h3 style={{color : '#4D4C7D'}} > Departments </h3>
         </Col>
         <Col md>
           <Button
@@ -111,22 +114,7 @@ function Departments() {
 
       {/* confirm modal set up start */}
 
-      <Modal show={confirm} onHide={hideConfirm} animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>Alert</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure want to remove this department({Id}) ?{" "}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={hideConfirm}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={confirmRemoval}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
+         { confirm ? <Confirm { ...confirmProps } /> : ''}
 
       {/* confirm modal set up end */}
     </>

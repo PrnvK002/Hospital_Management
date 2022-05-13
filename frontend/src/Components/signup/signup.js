@@ -10,8 +10,6 @@ import AlertMessage from "../Alert/Alert";
 
 function Signup() {
   const navigate = useNavigate();
-  const [errorMessage, setError] = useState();
-
   //====================== Validation ===========================
   const {
     register,
@@ -104,9 +102,6 @@ function Signup() {
 
   return (
     <>
-      {errorMessage && (
-        <p style={{ color: "red", fontSize: "0.8rem" }}>{errorMessage}</p>
-      )}
 
       {success && <AlertMessage {...props} />}
 

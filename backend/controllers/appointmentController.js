@@ -37,13 +37,35 @@ export const getAppointments = asyncHandler(async (req, res) => {
 //@route post /appointment
 
 export const fixingAppointment = asyncHandler(async (req, res) => {
-  const appointment = new Appointments({
-    doctor_id: req.body.doctor,
-    patient_id: req.user._id,
-    token: req.body.token,
-  });
-
-  const data = await appointment.save();
+  console.log(req.body);
+  let data;
+  const details = await Appointment.find({
+    doctor_id: req.body.doctor_id,
+    date: new Date(req.body.date),
+  })
+    .sort({ date: -1 })
+    .limit(1);
+    console.log(details);
+  if (details[0].token) {
+    const token = details[0].token;
+    const appointment = new Appointment({
+      doctor_id: req.body.doctor_id,
+      patient_id: req.user._id,
+      token: token + 1,
+      paymentDetails: req.body.paymentDetails,
+      date: req.body.date,
+    });
+    data = await appointment.save();
+  } else {
+    const appointment = new Appointment({
+      doctor_id: req.body.doctor_id,
+      patient_id: req.user._id,
+      token: 1,
+      paymentDetails: req.body.paymentDetails,
+      date: new Date(req.body.date),
+    });
+    data = await appointment.save();
+  }
 
   if (data) {
     res.status(200).json({ data });
@@ -64,5 +86,20 @@ export const getAppointmentHistory = asyncHandler(async (req, res) => {
   } else {
     res.status(404);
     throw new Error("Cannot get appointment History");
+  }
+});
+
+//@desc get currently active appointments
+//@access public 
+//@route get /appointment
+
+export const getActiveBooking = asyncHandler( async (req,res) =>{
+
+  const appointment = await Appointment.find({ status : 'active' });
+  if(appointment.length > 0){
+    res.status(200).json({ appointment });
+  }else{
+    res.status(404);
+    throw new Error('unable to find appointments');
   }
 });

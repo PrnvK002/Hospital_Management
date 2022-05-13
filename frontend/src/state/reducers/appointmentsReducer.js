@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../axios";
 
-//================ getAppointments from backend ==========
+//================ getAppointments from backend(doctors) ==========
 
-const getAppointments = createAsyncThunk('appointments/get',async(_,{getState})=>{
+export const getAppointments = createAsyncThunk('appointments/get',async(_,{getState})=>{
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.get('/doctor/appointments',{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
@@ -11,11 +11,16 @@ const getAppointments = createAsyncThunk('appointments/get',async(_,{getState})=
     return response.data.appointments;
 });
 
-//=============== get a single appointment of a user ==========
+//=============== get active appointments of a user ==========
+
+export const getActiveAppointments = createAsyncThunk('appointments/active/get',async(_,{getState}) => {
+    
+} )
 
 //================= Add an appointment ==================
 
-const fixAppointment = createAsyncThunk('appointments/add',async (data,{getState})=>{
+export const fixAppointment = createAsyncThunk('appointments/add',async (data,{getState})=>{
+    console.log(data);
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.post('/appointment',data,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
@@ -24,7 +29,7 @@ const fixAppointment = createAsyncThunk('appointments/add',async (data,{getState
 
 //==================== Appointment History ==============
 
-const getAppointmentHistory = createAsyncThunk('appointments/get/history',async (_,{getState}) =>{
+export const getAppointmentHistory = createAsyncThunk('appointments/get/history',async (_,{getState}) =>{
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.get('/appointmentHistory',{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
@@ -95,4 +100,4 @@ const appointmentReducer = createSlice({
 
 export const { setDataChange } = appointmentReducer.actions;
 
-export default appointmentReducer.reducers;
+export default appointmentReducer.reducer;

@@ -10,7 +10,7 @@ const router = express.Router();
 //@access private staff
 //@route get /appointments
 
-router.get('/appointments',authenticationMiddleware,getAllAppointmetns);
+router.get('/appointments/:page',authenticationMiddleware,getAllAppointmetns);
 
 //@desc get medical reports of a user
 //@access private doctor
@@ -40,5 +40,7 @@ router.get('/userPrescription/:id',authenticationMiddleware,showUserPrescription
 //@route post /staff/prescription/id(prescriptionId)
 
 router.get('/prescription/:id',authenticationMiddleware,showPrescription);
+
+
 
 export default router;

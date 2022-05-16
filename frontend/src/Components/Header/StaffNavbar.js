@@ -10,8 +10,8 @@ function StaffNavbar() {
       <Container>
         <Nav className="mx-auto">
           <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="#features">Appointments</Nav.Link>
-          <Nav.Link href="#pricing">History</Nav.Link>
+          <Nav.Link href="/staff/appointments">Appointments</Nav.Link>
+          <Nav.Link href="/staff/medicalReport">Medical Reports</Nav.Link>
         </Nav>
       </Container>
     </Navbar>

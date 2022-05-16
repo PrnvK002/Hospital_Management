@@ -1,10 +1,9 @@
 import express from 'express';
 const router = express.Router();
 import authentication from '../middlewares/authentication.js';
-// import { authLogin , registerUser , sendOtp , homePage , getDoctors , fixingAppointment } from '../controllers/patientControllers.js';
 import { authLogin,registerUser,sendOtp,getDoctors } from '../controllers/userController.js';
 import { homePage } from '../controllers/departmentController.js';
-import { fixingAppointment , getAppointmentHistory , getActiveBooking } from '../controllers/appointmentController.js';
+import { fixingAppointment , getAppointmentHistory , getActiveBooking , cancelAppointment } from '../controllers/appointmentController.js';
 import authenticationMiddleware from '../middlewares/authentication.js';
 
 //@desc route for login permision
@@ -44,12 +43,18 @@ router.post('/appointment',authentication,fixingAppointment);
 //@access public 
 //@route get /appointmentHistory
 
-router.get('/appointmentHistory',authenticationMiddleware,getAppointmentHistory);
+router.get('/appointmentHistory/:page',authenticationMiddleware,getAppointmentHistory);
 
 //@desc get currently active appointments
 //@access public 
 //@route get /appointment
 
 router.get('/appointment',authenticationMiddleware,getActiveBooking);
+
+//@desc cancel appointment
+//@access public 
+//@route patch /appointment/cancel
+
+router.patch('/appointment/cancel',authenticationMiddleware,cancelAppointment);
 
 export default router;

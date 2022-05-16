@@ -9,7 +9,7 @@ const router = express.Router();
 //@access private doctor
 //@route get /appointments
 
-router.get('/appointments',authenticationMiddleware,getAppointments);
+router.get('/appointments/:page',authenticationMiddleware,getAppointments);
 
 //@desc Add prescription
 //@access private doctor

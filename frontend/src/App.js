@@ -11,7 +11,9 @@ import AddUser from "./Pages/addUser";
 import Departments from "./Pages/Departments";
 import AddDepartment from "./Pages/AddDepartment";
 import BookAppointment from "./Pages/BookAppointment";
-import ConfirmAppointment from "./Pages/ConfirmAppointment";
+import Booking from './Pages/Bookings';
+import History from './Pages/AppointmentHistory';
+import StaffAppointments from "./Pages/staffAppointments";
 //============== PAGES END ======================
 //=============== COMPONENTS ===================
 import Header from "./Components/Header/Header";
@@ -34,8 +36,9 @@ function App() {
             <Route path="/admin/departments" element={<Departments />} />
             <Route path="/admin/addDepartment" element={<AddDepartment />} />
             <Route path="/bookAppointment/:id/:departmentName" element={<BookAppointment />} />
-            <Route path="/confirmAppointment/:id" element={<ConfirmAppointment />} />
-            
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/staff/appointments" element={<StaffAppointments />} />
           </Routes>
         </Container>
       </main>

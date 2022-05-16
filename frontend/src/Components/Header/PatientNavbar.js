@@ -9,8 +9,8 @@ function PatientNavbar() {
       <Container>
         <Nav className="mx-auto text-white">
           <Nav.Link className="text-white" href="/">Home</Nav.Link>
-          <Nav.Link className="text-white" href="#features">Booking</Nav.Link>
-          <Nav.Link className="text-white" href="#pricing">History</Nav.Link>
+          <Nav.Link className="text-white" href="/booking">Booking</Nav.Link>
+          <Nav.Link className="text-white" href="/history">History</Nav.Link>
         </Nav>
       </Container>
     </Navbar>

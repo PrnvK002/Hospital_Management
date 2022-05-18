@@ -47,7 +47,7 @@ export const getDoctorsOfDepartments = createAsyncThunk(
     const response = await Axios.get(`/getDoctors/${id}`, {
       headers: { authorization: `Bearer ${userInfo.authToken}` },
     });
-    return response.data;
+    return response.data.doctors;
   }
 );
 

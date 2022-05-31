@@ -12,11 +12,14 @@ import cors from 'cors';
 // console.log(process.env);
 
 //=============== Routes ===========================
-import adminRoutes from './routes/adminRoutes.js';
-import patientRoutes from './routes/patientRoutes.js';
-import staffRoutes from './routes/staffRoutes.js';
-import doctorRoutes from './routes/doctorRoutes.js';
-import uploadRoute from './routes/uploadRoute.js'
+import appointmentRoute from './routes/appointmentRoutes.js';
+import userRoute from './routes/usersRoutes.js';
+import medicineRoute from './routes/medicineRoute.js';
+import reportRoute from './routes/reportRoutes.js';
+import departmentRoute from './routes/departmentRoutes.js';
+import uploadRoute from './routes/uploadRoute.js';
+import serviceRoute from './routes/serviceRoutes.js';
+import chatRoute from './routes/chatRoute.js';
 //================== Mongodb server connection ==============================
 connectDB();
 
@@ -36,12 +39,14 @@ app.use(logger("dev"));
 
 //====================== Routing to different routes ====================
 
-app.use('/',patientRoutes);
-app.use('/admin',adminRoutes);
-app.use('/staff',staffRoutes);
-app.use('/doctor',doctorRoutes);
+app.use('/',userRoute);
+app.use('/medicine',medicineRoute);
+app.use('/department',departmentRoute);
+app.use('/report',reportRoute);
+app.use('/appointment',appointmentRoute);
 app.use('/uploads',uploadRoute);
-
+app.use('/services',serviceRoute);
+app.use('/chat',chatRoute);
 
 //====================== Error handling middleware ==========================
 

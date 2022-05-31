@@ -20,7 +20,6 @@ function MoreInfoModal( { show , handleClose , showConfirm , moreUserData  } ) {
               <p> {data.phone} </p>
               <p> {data.role} </p>
               <p> {data.age} </p>
-              <p>User from : {data.createdAt} </p>
               <p> {data.department ? data.department : ""} </p>
               <p> {data.salary ? data.salary : ""} </p>
             </div>
@@ -32,14 +31,19 @@ function MoreInfoModal( { show , handleClose , showConfirm , moreUserData  } ) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              showConfirm(data._id, data.isBlocked);
-            }}
-          >
-            {data.isBlocked ? "Unblock" : "Block"}
-          </Button>
+          {
+            showConfirm ?  
+             (
+              <Button
+                variant="primary"
+                onClick={() => {
+                  showConfirm(data._id, data.isBlocked);
+                }}
+              >
+                {data.isBlocked ? "Unblock" : "Block"}
+              </Button>) : 
+                ''
+          }
         </Modal.Footer>
       </Modal>
     </>

@@ -16,7 +16,7 @@ const department_fileFilter = (req, file, cb) => {
   }
 };
 
-export const uploadDepartment = multer({
+export const upload = multer({
   storage: multer.diskStorage({
     filename : (req,file,cb)=>{
       cb(null,`${file.fieldname}-${Date.now}${path.extname(file.originalname)}`)

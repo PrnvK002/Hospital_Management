@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../axios";
 
+//================= login user ===================
 export const loginUser = createAsyncThunk(
   "/login",
   async ({ email, password }) => {
@@ -9,6 +10,17 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+//================= Profile Update ==============
+
+export const updateProfile = createAsyncThunk('user/update', async (data, { getState }) => {
+  const state = getState();
+  const userInfo = state.userLogin.data;
+  const response = await Axios.put('/profile', data, { headers: { authorization: `Bearer ${userInfo.authToken}` } });
+  // console.log(response);
+  return response.data;
+})
+
+//===================== send otp user ===============
 export const signupUser = createAsyncThunk("/signup", async (data) => {
   console.log(data);
   const response = await Axios.post("/sendOtp", { phone: data.phone });
@@ -17,6 +29,7 @@ export const signupUser = createAsyncThunk("/signup", async (data) => {
   }
 });
 
+//==================== create user ==================
 export const createUser = createAsyncThunk(
   "signup/create",
   async (userData) => {
@@ -35,10 +48,13 @@ export const createUser = createAsyncThunk(
   }
 );
 
+//===================== user data from storage ============
+
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : {};
 
+//==================== creating slice ==================
 const userReducer = createSlice({
   name: "userLogin",
   initialState: {
@@ -86,6 +102,19 @@ const userReducer = createSlice({
       state.error = "Error occured while creating the user";
       state.loading = false;
     },
+    [updateProfile.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      state.data = action.payload;
+      localStorage.setItem("userInfo", JSON.stringify(action.payload));
+      state.loading = false;
+    },
+    [updateProfile.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [updateProfile.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = 'Error occured while updating the profile';
+    },
     logout: (state, action) => {
       console.log("Logged out");
       state.data = {};
@@ -95,5 +124,7 @@ const userReducer = createSlice({
     },
   },
 });
+
+export const { resetUpdate } = userReducer.actions;
 
 export default userReducer.reducer;

@@ -39,8 +39,8 @@ function Topbar(props) {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu variant="dark">
-                    <Dropdown.Item href="">{userInfo.email}</Dropdown.Item>
-                    <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                    <Dropdown.Item>{userInfo.email}</Dropdown.Item>
+                    <Dropdown.Item onClick={ ()=>{ navigate('/profile') } } >Profile</Dropdown.Item>
                     <Dropdown.Item onClick={() => logout()}>
                       Logout
                     </Dropdown.Item>

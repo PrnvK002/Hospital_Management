@@ -1,14 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../axios";
 
+//================ getting more information about a perticular user ===================
 export const getMoreInfo = createAsyncThunk("moreInfo", async (id,{getState}) => {
   console.log(id);
   const state = getState();
   const userInfo = state.userLogin.data;
-  const response = await Axios.get(`/admin/user/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+  const response = await Axios.get(`/user/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
   console.log(response);
   return response.data.user;
 });
+
+//================= Slice for moreInfo data ========================
 
 const moreInfo = createSlice({
   name: "moreInfo",

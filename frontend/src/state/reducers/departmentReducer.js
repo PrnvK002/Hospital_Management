@@ -4,7 +4,7 @@ import Axios from "../../axios";
 //================== Getting all departments ==========================
 
 export const getDepartments = createAsyncThunk("departments/get", async () => {
-  const response = await Axios.get("/");
+  const response = await Axios.get("/department");
   return response.data.departments;
 });
 
@@ -16,7 +16,7 @@ export const addDepartment = createAsyncThunk(
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.post(
-      "/admin/addDepartments",
+      "/department",
       data,
       {
         headers: {
@@ -37,7 +37,7 @@ export const removeDepartment = createAsyncThunk(
     console.log('reaching removeDepartment');
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.delete(`/admin/removeDepartment/${id}`, {
+    const response = await Axios.delete(`/department/${id}`, {
       headers: { authorization: `Bearer ${userInfo.authToken}` },
     });
     console.log(response);
@@ -77,7 +77,6 @@ const departmentReducer = createSlice({
       state.error = "Cannot find Departments";
     },
     [addDepartment.fulfilled]: (state, action) => {
-      state.departments.push(action.payload);
       state.loading = false;
       state.dataChanged = true;
       state.error = "";

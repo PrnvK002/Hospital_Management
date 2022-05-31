@@ -16,7 +16,7 @@ import { addUserData, setDataChange } from "../state/reducers/userDataReducer";
 
 function AddUser() {
   const departmentData = useSelector((state) => state.departmentData);
-  const userData = useSelector((state) => state.userData);
+  const userData = useSelector((state) => state.usersData);
   const { loading, error, dataChanged } = userData;
   const { departments } = departmentData;
   const navigate = useNavigate();

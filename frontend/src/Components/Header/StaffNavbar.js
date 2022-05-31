@@ -6,12 +6,12 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 function StaffNavbar() {
 
   return (
-    <Navbar bg="primary" style={{background : "#363062"}} variant="light">
+    <Navbar style={{background : "#363062"}} >
       <Container>
         <Nav className="mx-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/staff/appointments">Appointments</Nav.Link>
-          <Nav.Link href="/staff/medicalReport">Medical Reports</Nav.Link>
+          <Nav.Link className="text-white" href="/">Home</Nav.Link>
+          <Nav.Link className="text-white" href="/staff/appointments">Appointments</Nav.Link>
+          <Nav.Link className="text-white" href="/staff/medicalReport">Medical Reports</Nav.Link>
         </Nav>
       </Container>
     </Navbar>

@@ -36,6 +36,7 @@ export const authLogin = asyncHandler(async (req, res) => {
       email: user.email,
       username: user.user_name,
       role: user.role,
+      age: user.age,
       phone: user.phone,
       gender: user.gender,
       authToken: generateToken(user._id),
@@ -107,7 +108,7 @@ export const sendOtp = async (req, res) => {
 
 export const getDoctors = asyncHandler(async (req, res) => {
   const departmentId = req.params.id;
-  const doctors = await User.find({ department: departmentId });
+  const doctors = await User.find({ department: departmentId, role: 'doctor' });
   if (doctors) {
     res.status(200).json({ doctors });
   } else {
@@ -131,7 +132,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       .populate("department", "departmentName")
       .skip(skip)
       .limit(pageLimit);
-    console.log(user);
+
     res.status(200).json({ user });
   } catch (err) {
     console.log(err);
@@ -196,8 +197,8 @@ export const addUser = asyncHandler(async (req, res) => {
     role: req.body.role,
     salary: Number(req.body.salary),
     department: req.body.department,
-    qualification : req.body.qualification,
-    workShift : req.body.workShift
+    qualification: req.body.qualification,
+    workShift: req.body.workShift
   });
 
   const status = await user.save();
@@ -209,4 +210,44 @@ export const addUser = asyncHandler(async (req, res) => {
     res.status(500);
     throw new Error("Some sort of error occured while adding user");
   }
+});
+
+//@desc edit profile
+//@access public
+//@route put /profile
+
+export const editProfile = asyncHandler(async (req, res) => {
+
+  console.log(req.body);
+  const update = await User.updateOne({ _id: req.user._id },
+    {
+      $set: {
+        email: req.body.email,
+        user_name: req.body.username,
+        phone: req.body.phone,
+        age: req.body.age,
+      }
+    });
+  if (update) {
+    const user = await User.findOne({ _id: req.user._id });
+    if (user) {
+      res.status(200).json({  
+        _id: user._id,
+        email: user.email,
+        username: user.user_name,
+        role: user.role,
+        age: user.age,
+        phone: user.phone,
+        gender: user.gender,
+        authToken: generateToken(user._id)
+       });
+    } else {
+      res.status(500);
+      throw new Error('updation failed')
+    }
+  } else {
+    res.status(500);
+    throw new Error('updation failed')
+  }
+
 });

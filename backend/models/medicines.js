@@ -10,6 +10,10 @@ const medicineSchema = new Schema({
     stock : {
         type : Number,
         required : true
+    },
+    price : {
+        type : Number,
+        required : true
     }
 });
 

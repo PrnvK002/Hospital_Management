@@ -21,8 +21,10 @@ function DoctorCard(props) {
         />
         <Card.Body>
           <Card.Title>{user_name}</Card.Title>
-          <Card.Text style={{ fontSize: "14px" }}>{qualification}</Card.Text>
-          <Card.Text style={{ fontSize: "14px" }}> Work Shift : {workShift}</Card.Text>
+          <Card.Text style={{ fontSize: "14px" , minHeight : "4rem" }}>{qualification}
+          <br />
+          Work Shift : {workShift}
+          </Card.Text>
           <Button
             variant="primary"
             onClick={() => {

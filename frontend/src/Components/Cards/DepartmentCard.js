@@ -24,7 +24,7 @@ function Cards({ _id , departmentName , description ,image , rating , setError }
         <Card.Img variant="top" src={image} style={{ width : "10rem" , height : "10rem" }} />
         <Card.Body>
           <Card.Title>{departmentName}</Card.Title>
-          <Card.Text style={{ fontSize : "14px" }}>
+          <Card.Text style={{ fontSize : "14px" , minHeight : "4rem"  }}>
             {description}
           </Card.Text>
           <Card.Text>

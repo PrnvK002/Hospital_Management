@@ -19,6 +19,7 @@ import Confirm from "../Components/Modal/Confirm";
 import MoreInfoModal from "../Components/Modal/MoreInfoModal";
 
 function UserManagement() {
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [role, setRole] = useState("patient");

@@ -1,48 +1,51 @@
 import asyncHandler from "express-async-handler";
 import Appointment from "../models/appointments.js";
 
-//@desc see all appointments
-//@access private doctor
-//@route get /staff/appointments
-
-export const getAllAppointmetns = asyncHandler(async (req, res) => {
-  const pageNumber = req.params.page;
-  const skip = (pageNumber - 1) * 10;
-  const appointments = await Appointment.find({
-    status: "active",
-    date: new Date(),
-  })
-    .populate("doctor_id")
-    .populate("user_id")
-    .skip(skip)
-    .limit(10);
-
-  if (appointments) {
-    res.status(200).json({ appointments });
-  } else {
-    res.status(404);
-    throw new Error("Cannot find all appointments");
-  }
-});
-
 //@desc see all appointments of a doctor
 //@access private doctor
 //@route get /doctor/appointments
 
 export const getAppointments = asyncHandler(async (req, res) => {
-  const page = req.params.page;
+  const page = req.query.page;
+  const role = req.query.role;
+  console.log(page , role);
   const skip = (page - 1) * 10;
-  const appointments = await Appointment.find({
-    doctor_id: req.user._id,
-  })
-    .populate("patient_id")
-    .skip(skip)
-    .limit(10);
-  if (appointments.length > 0) {
-    res.status(200).json({ appointments });
+  const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+
+  if (role === "doctor") {
+    const appointments = await Appointment.find({
+      doctor_id: req.user._id,
+      status : 'active',
+      date: { $gt: yesterday },
+    })
+      .populate("patient_id")
+      .sort({ token : 1})
+      .skip(skip)
+      .limit(10);
+    if (appointments.length > 0) {
+      res.status(200).json({ appointments });
+    } else {
+      res.status(204);
+      throw new Error("No appointments available");
+    }
   } else {
-    res.status(404);
-    throw new Error("Appointments not found");
+
+    const appointments = await Appointment.find({
+      status: "active", 
+      date: { $gt: yesterday },
+    })
+      .populate("doctor_id")
+      .populate("patient_id")
+      .sort({ token : 1})
+      .skip(skip)
+      .limit(10);
+
+    if (appointments.length > 0) {
+      res.status(200).json({ appointments });
+    } else {
+      res.status(204);
+      throw new Error("Cannot find all appointments");
+    }
   }
 });
 
@@ -95,12 +98,16 @@ export const fixingAppointment = asyncHandler(async (req, res) => {
 
 export const getAppointmentHistory = asyncHandler(async (req, res) => {
   const page = req.params.page;
-  const skip = (page-1)*10;
-  const appointments = await Appointment.find({ user_id: req.user._id }).populate('doctor_id','user_name workShift').skip(skip).limit(10);
+  const skip = (page - 1) * 10;
+  const appointments = await Appointment.find({ user_id: req.user._id })
+    .populate("doctor_id", "user_name workShift")
+    .sort({ date : -1})
+    .skip(skip)
+    .limit(10);
   if (appointments) {
     res.status(200).json({ appointments });
   } else {
-    res.status(404);
+    res.status(204);
     throw new Error("Cannot get appointment History");
   }
 });
@@ -110,11 +117,18 @@ export const getAppointmentHistory = asyncHandler(async (req, res) => {
 //@route get /appointment
 
 export const getActiveBooking = asyncHandler(async (req, res) => {
-  const appointment = await Appointment.find({ user_id : req.user._id,status: "active" }).populate('doctor_id','user_name workShift');
+  const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  const appointment = await Appointment.find({
+    user_id: req.user._id,
+    status: "active",
+    date: { $gt:yesterday },
+  }).populate("doctor_id", "user_name workShift");
   if (appointment.length > 0) {
+    console.log(appointment);
     res.status(200).json({ appointment });
   } else {
-    res.status(404);
+    console.log(appointment);
+    res.status(204);
     throw new Error("unable to find appointments");
   }
 });
@@ -129,8 +143,8 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
     { _id: id },
     { $set: { status: "cancelled" } }
   );
-  if (cancel) {
-    res.status(200);
+  if (cancel.acknowledged) {
+    res.status(200).json({});
   } else {
     res.status(500);
     throw new Error("Failed to cancel the appointment");

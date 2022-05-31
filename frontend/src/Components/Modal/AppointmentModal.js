@@ -23,7 +23,6 @@ function AppointmentModal({
       doctor_id: doctorData.id,
       date: date,
     };
-    setSuccess(true);
     dispatch(fixAppointment(data));
     handleClose();
   };

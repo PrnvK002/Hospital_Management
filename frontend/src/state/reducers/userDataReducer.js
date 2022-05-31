@@ -9,7 +9,7 @@ export const getUsersData = createAsyncThunk(
     const { role, page } = conditions;
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/admin/users/${role}/${page}`, {
+    const response = await Axios.get(`/users/${role}/${page}`, {
       headers: {
         authorization: `Bearer ${userInfo.authToken}`,
       },
@@ -26,13 +26,12 @@ export const addUserData = createAsyncThunk(
     console.log(data);
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post("/admin/addUser", data, {
+    const response = await Axios.post("/user", data, {
       headers: {
         authorization: `Bearer ${userInfo.authToken}`,
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
     return response.data.status;
   }
 );

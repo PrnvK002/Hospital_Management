@@ -1,15 +1,16 @@
 import express from "express";
 import logger from "morgan";
 import bodyParser from 'body-parser';
+import path from 'path';
 // import dotenv from "dotenv";
+import cors from 'cors';
 import connectDB from "./config/connection.js";
 import { notFound , errorHandler } from './middlewares/errorHandler.js';
-import cors from 'cors';
+import { NODE_ENV } from './config/global.js';
 
 //=================== environment variable setup ============================
-//put it about routes
+//put it abouve routes
 // dotenv.config({ path : './.env' });
-// console.log(process.env);
 
 //=============== Routes ===========================
 import appointmentRoute from './routes/appointmentRoutes.js';
@@ -47,6 +48,20 @@ app.use('/appointment',appointmentRoute);
 app.use('/uploads',uploadRoute);
 app.use('/services',serviceRoute);
 app.use('/chat',chatRoute);
+
+const __dirname = path.resolve()
+if (NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'))
+  )
+} else {
+    console.log(NODE_ENV);
+  app.get('/', (req, res) => {
+    res.send('API is running....')
+  })
+}
 
 //====================== Error handling middleware ==========================
 

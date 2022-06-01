@@ -14,7 +14,7 @@ router.post('/prescription',authenticationMiddleware,addPrescription);
 //@access private staff
 //@route get /medicine/prescription/id(userId)
 
-router.get('/prescription/:id',authenticationMiddleware,showPrescription);
+router.get('/prescription',authenticationMiddleware,showPrescription);
 
 //@desc get medicine details
 //@access private staff/doctor

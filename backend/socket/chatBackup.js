@@ -17,7 +17,16 @@ export function addMessage(message, user, doctor, isDoctor, conversationId) {
       const status = await addMessage.save();
 
       if (status) {
-        resolve(status);
+        const send = await Message.aggregate([
+          { $match: { _id: mongoose.Types.ObjectId(status._id) } },
+          { $lookup: { from: 'users', localField: 'from', foreignField: '_id', as: 'from' } },
+          { $unwind: "$from" }
+        ]);
+        if (send) {
+          resolve(send);
+        } else {
+          reject('failed no message');
+        }
       } else {
         reject("failed to add message to the database");
       }
@@ -28,15 +37,32 @@ export function addMessage(message, user, doctor, isDoctor, conversationId) {
         user_id: user,
         doctor_id: doctor,
       });
-      if (check) {
-        const addMessage = await Message.create({
+      console.log("checking chat",check);
+      if (Object.keys(check).length > 0) {
+        const addMessage = new Message({
           conversationId: check._id,
           message: message,
           from: from,
         });
 
-        if (addMessage) {
-          resolve(check._id);
+        const msg = await addMessage.save();
+
+        console.log('added message in chat',msg);
+
+        if (msg) {
+          const send = await Message.aggregate([
+            { $match: { _id: mongoose.Types.ObjectId(msg._id) } },
+            { $lookup: { from: 'users', localField: 'from', foreignField: '_id', as: 'from' } },
+            { $unwind: "$from" }
+          ]);
+
+          console.log("sending message",send);
+
+          if(send){
+            resolve(send);
+          }else{
+            reject('failed to send message');
+          }
         } else {
           reject("failed to add message to the database");
         }
@@ -47,7 +73,7 @@ export function addMessage(message, user, doctor, isDoctor, conversationId) {
         });
 
         const status = await conversation.save();
-
+        console.log("new Chat",status);
         if (status) {
           const addMessage = new Message({
             conversationId: status._id,
@@ -58,7 +84,16 @@ export function addMessage(message, user, doctor, isDoctor, conversationId) {
           const Message = await addMessage.save();
 
           if (addMessage) {
-            resolve(Message);
+            const send = await Message.aggregate([
+              { $match: { _id: mongoose.Types.ObjectId(status._id) } },
+              { $lookup: { from: 'users', localField: 'from', foreignField: '_id', as: 'from' } },
+              { $unwind: "$from" }
+            ]);
+            if (send) {
+              resolve(send);
+            } else {
+              reject('failed no message');
+            }
           } else {
             reject("failed to add message to the database");
           }
@@ -104,9 +139,9 @@ export function getMessages(conversationId) {
     const messages = await Message.aggregate([
       { $match: { conversationId: mongoose.Types.ObjectId(conversationId) } },
       { $lookup: { from: 'users', localField: 'from', foreignField: '_id', as: 'from' } },
-      { $unwind : "$from" }
+      { $unwind: "$from" }
     ]);
-    console.log(messages);
+    
     if (messages.length > 0) {
       resolve(messages);
     } else {

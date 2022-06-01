@@ -3,19 +3,23 @@ import Appointment from "../models/appointments.js";
 
 //@desc see all appointments of a doctor
 //@access private doctor
-//@route get /doctor/appointments
+//@route get /appointments
 
 export const getAppointments = asyncHandler(async (req, res) => {
+
+  console.log(req);
+  console.log(req.params);
   const page = req.query.page;
   const role = req.query.role;
-  console.log(page , role);
+  const state = req.query.state;
+  console.log(page , role,state,"queries" );
   const skip = (page - 1) * 10;
   const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
 
   if (role === "doctor") {
     const appointments = await Appointment.find({
       doctor_id: req.user._id,
-      status : 'active',
+      status : state,
       date: { $gt: yesterday },
     })
       .populate("patient_id")
@@ -29,9 +33,9 @@ export const getAppointments = asyncHandler(async (req, res) => {
       throw new Error("No appointments available");
     }
   } else {
-
+    console.log(state);
     const appointments = await Appointment.find({
-      status: "active", 
+      status: state, 
       date: { $gt: yesterday },
     })
       .populate("doctor_id")
@@ -39,7 +43,7 @@ export const getAppointments = asyncHandler(async (req, res) => {
       .sort({ token : 1})
       .skip(skip)
       .limit(10);
-
+    
     if (appointments.length > 0) {
       res.status(200).json({ appointments });
     } else {
@@ -117,10 +121,11 @@ export const getAppointmentHistory = asyncHandler(async (req, res) => {
 //@route get /appointment
 
 export const getActiveBooking = asyncHandler(async (req, res) => {
+  const {status} = req.params;
   const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const appointment = await Appointment.find({
     user_id: req.user._id,
-    status: "active",
+    status: status,
     date: { $gt:yesterday },
   }).populate("doctor_id", "user_name workShift");
   if (appointment.length > 0) {

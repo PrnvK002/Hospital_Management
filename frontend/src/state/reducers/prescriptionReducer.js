@@ -11,11 +11,13 @@ export const addPrescription = createAsyncThunk('prescription/add',async (data,{
 });
 
 //================== Get Prescription ==============
-export const getPrescription = createAsyncThunk('prescription/get',async (id,{getState})=>{
+export const getPrescription = createAsyncThunk('prescription/get',async (data,{getState})=>{
+    console.log(data,"reducer");
+    const {id , date , user_id } = data;
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/medicine/prescription/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` }});
-    return response.data;
+    const response = await Axios.get(`/medicine/prescription?id=${id}&date=${date}&user_id=${user_id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` }});
+    return response.data.prescription;
 });
 
 //====================== prescription slice ================

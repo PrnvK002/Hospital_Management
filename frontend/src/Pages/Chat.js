@@ -8,7 +8,7 @@ import { getAllMessages } from "../state/reducers/chatReducer";
 import MessageComponent from "../Components/MessageComponent/Message";
 import io from "socket.io-client";
 
-function Chat() {
+function  Chat() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const userInfo = useSelector((state) => state.userLogin.data);
@@ -46,8 +46,9 @@ function Chat() {
   //=============== handling functions =========
   const handleRecieveMessage = (newMessage) => {
     newMessage = JSON.parse(newMessage);
-    console.log(newMessage);
-    setMessageData([...messageData, newMessage]);
+    const {response} = newMessage;
+    const msg = response[0];
+    setMessageData((prevState)=> [...prevState,msg]);
   }
 
   const handleConversationId = (data) => {
@@ -109,9 +110,9 @@ function Chat() {
                 data.map((d) => {
                   return (
                     <div
+                      key={d._user_id}
                       style={{ height: "3rem", cursor: "pointer" }}
                       className="border d-flex align-items-center justify-content-center"
-                      key={d._user_id}
                     >
                       <p
                         className="mt-3"
@@ -153,12 +154,12 @@ function Chat() {
               <div
                 style={{
                   borderTop: " 1px solid  #4D4C7D",
-                  height: "3rem",
+                  height: "auto",
                   width: "100%",
                   position: "relative",
 
                 }}
-                className="d-flex align-items-center"
+                className="d-flex align-items-center p-2"
               >
                 <input
                   type="text"

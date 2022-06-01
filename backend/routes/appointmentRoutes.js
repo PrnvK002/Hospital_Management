@@ -7,7 +7,7 @@ const router = express.Router();
 //@access public 
 //@route get /appointment
 
-router.get('/',authenticationMiddleware,getActiveBooking);
+router.get('/getActive/:status',authenticationMiddleware,getActiveBooking);
 
 //@desc fix an appointment
 //@access public 
@@ -25,7 +25,7 @@ router.get('/history/:page',authenticationMiddleware,getAppointmentHistory);
 //@access private doctor,staffs
 //@route get /appointment/get
 
-router.get('/get',authenticationMiddleware,getAppointments);
+router.get('/getAppointment',authenticationMiddleware,getAppointments);
 
 //@desc cancel appointment
 //@access public 

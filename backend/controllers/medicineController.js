@@ -47,8 +47,11 @@ export const addPrescription = asyncHandler(async (req, res) => {
 //@route post /staff/prescription/id(prescriptionId)
 
 export const showPrescription = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const prescription = await Prescription.findOne({ user_id: id });
+  let { id , date , user_id } = req.query;
+  date = date.split('T')[0];
+  // const newDate = new Date(date);
+  // console.log(newDate);
+  const prescription = await Prescription.findOne({ doctor_id: id , user_id : user_id  });
   if (prescription) {
     res.status(200).json({ prescription });
   } else {

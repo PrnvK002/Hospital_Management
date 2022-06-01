@@ -83,7 +83,7 @@ function Body() {
                 className="ms-auto text-center vertical-center"
                 style={{
                   position: "fixed",
-                  bottom: "5rem",
+                  bottom: "4rem",
                   right: "7rem",
                   borderRadius: "100%",
                   height: "3.5rem",

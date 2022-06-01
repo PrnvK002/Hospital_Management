@@ -5,7 +5,10 @@ import MessageComponent from "../Components/MessageComponent/Message";
 import io from "socket.io-client";
 import Loader from "../Components/Loading/loader";
 
+
+
 function ChatDoctor() {
+
 
   const userInfo = useSelector((state) => state.userLogin.data);
   const [messengers, setMessengers] = useState([]);
@@ -41,6 +44,8 @@ function ChatDoctor() {
     const handleRecieveMessage = (newMessage) => {
       newMessage = JSON.parse(newMessage);
       console.log(newMessage);
+      const msg = newMessage.response[0];
+      setMessageData([...messageData,msg]);
     }
 
     //==================== handling chat response ===========

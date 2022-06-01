@@ -28,6 +28,7 @@ io.on("connect", (socket) => {
       data = JSON.parse(data);
       console.log(data);
       users[data.userId] = socket.id;
+      console.log(users);
     }
     //============== handle message ===================
     const handleMessage = (data)=>{
@@ -35,9 +36,9 @@ io.on("connect", (socket) => {
       console.log(data);
       const { message, user, doctor, isDoctor , conversationId } = data;
       addMessage(message, user, doctor,isDoctor,conversationId).then((response)=>{
-       
-          if( users[doctor] && isDoctor === false ){
-            socket.broadcast.to(user[doctor]).emit('recieveMessage',JSON.stringify({ response}));
+        if( users[doctor] && isDoctor === false ){
+            console.log("resolved data in then",response);
+            socket.broadcast.to(users[doctor]).emit('recieveMessage',JSON.stringify({ response}));
           }
           if(users[user] && isDoctor === true ){
             socket.broadcast.to(users[user]).emit('recieveMessage',JSON.stringify({ response }));
@@ -80,10 +81,10 @@ io.on("connect", (socket) => {
 
 //======== socket event listeners =========================
   socket.on("init", handleInit);
-  socket.on("disconnect", handleDisconnect);
   socket.on('message',handleMessage);
   socket.on('newMessengers',handleNewMessengers);
   socket.on('getChat',handleGetChat);
+  socket.on("disconnect", handleDisconnect);
 });
 
 

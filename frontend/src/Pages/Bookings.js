@@ -12,7 +12,7 @@ function Bookings() {
   const { appointments, loading, error, dataChanged } = appointment;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getActiveAppointments());
+    dispatch(getActiveAppointments('active'));
   }, [dispatch]);
 
   //========= setting datachanged to false ======

@@ -9,7 +9,7 @@ export const getAppointments = createAsyncThunk(
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.get(
-      `/appointment/get?page=${pageNumber}&role=doctor`,
+      `/appointment/getAppointment?page=${pageNumber}&role=doctor&state=active`,
       { headers: { authorization: `Bearer ${userInfo.authToken}` } }
     );
     console.log(response);
@@ -21,11 +21,12 @@ export const getAppointments = createAsyncThunk(
 
 export const getAllAppointmetns = createAsyncThunk(
   "appointments/get/staff",
-  async (pageNumber, { getState }) => {
+  async (data, { getState }) => {
+    const { page , status } = data;
     const state = getState();
     const userInfo = state.userLogin.data;
     const response = await Axios.get(
-      `/appointment/get?page=${pageNumber}&role=staff`,
+      `/appointment/getAppointment?page=${page}&role=staff&state=${status}`,
       { headers: { authorization: `Bearer ${userInfo.authToken}` } }
     );
     console.log(response);
@@ -37,10 +38,10 @@ export const getAllAppointmetns = createAsyncThunk(
 
 export const getActiveAppointments = createAsyncThunk(
   "appointments/active/get",
-  async (_, { getState }) => {
+  async (status, { getState }) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get("/appointment", {
+    const response = await Axios.get(`/appointment/getActive/${status}`, {
       headers: { authorization: `Bearer ${userInfo.authToken}` },
     });
     console.log(response);
@@ -158,7 +159,7 @@ const appointmentReducer = createSlice({
       state.loading = false;
     },
     [getAllAppointmetns.fulfilled]: (state, action) => {
-      state.appointments = action.payload;
+      state.appointments = action.payload || [] ;
       state.loading = false;
     },
     [getAllAppointmetns.pending]: (state, action) => {

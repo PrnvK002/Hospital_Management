@@ -2,7 +2,6 @@ import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
 function Message(props) {
-
   return (
     <>
       <ToastContainer className="p-3">

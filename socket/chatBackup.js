@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Chat from "../models/chat.js";
-import Message from "../models/messages.js";
+import Chat from "./models/chat.js";
+import Message from "./models/messages.js";
 
 //=================== Add messages to the database ======================
 export function addMessage(message, user, doctor, isDoctor, conversationId) {

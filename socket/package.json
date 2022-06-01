@@ -1,0 +1,16 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "description": "socket io setup",
+  "main": "setting.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pranav KV",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.3.5",
+    "socket.io": "^4.5.1"
+  }
+}

@@ -1,0 +1,1 @@
+export const MONGO_URI = 'mongodb+srv://user123:accessdata@blogs.ej6tx.mongodb.net/hospitalManagement?retryWrites=true&w=majority'

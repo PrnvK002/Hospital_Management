@@ -20,6 +20,7 @@ const io = new Server(server,{
 const users = {};
 
 app.use('/',(req,res)=>{
+  console.log(req);
   res.send("its working")
 });
 

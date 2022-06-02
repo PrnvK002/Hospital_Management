@@ -18,7 +18,7 @@ function Bookings() {
   //========= setting datachanged to false ======
   const [success , setSuccess] = useState(false);
   useEffect(()=>{
-    if(dataChanged){
+    if(dataChanged === true ){
       setSuccess(true);
       dispatch(setDataChange());
     }

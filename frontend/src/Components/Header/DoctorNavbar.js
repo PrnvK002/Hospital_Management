@@ -10,7 +10,7 @@ function DoctorNavbar() {
       <Container>
         <Nav className="mx-auto">
           <Nav.Link className="text-white" onClick={()=>navigate('/')}>Home</Nav.Link>
-          <Nav.Link className="text-white" onClick={()=>navigate('/dashboard')}>Dashboard</Nav.Link>
+          {/* <Nav.Link className="text-white" onClick={()=>navigate('/dashboard')}>Dashboard</Nav.Link> */}
           <Nav.Link className="text-white" onClick={ ()=>navigate('/doctor/appointments') }>Appointments</Nav.Link>
           <Nav.Link className="text-white" onClick={ ()=>navigate('/doctor/chat') } >Messages</Nav.Link>
         </Nav>

@@ -69,7 +69,7 @@ function AppointmentHistory() {
                           {" "}
                           {data.doctor_id.workShift}{" "}
                         </td>
-                        <td> {data.status} </td><td style={{ color : 'blue' , fontSize : '13px' , cursor : 'pointer'}} onClick ={ ()=>{ handleModal(data.doctor_id._id , data.date ) } } > { data.status === 'treated' ? <u  > Show Prescription </u> : '' } </td>
+                        <td> {data.status} </td>  
                         <td>
                           {" "}
                           <Moment format="YYYY/MM/DD">{data.date}</Moment>{" "}

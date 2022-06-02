@@ -57,7 +57,7 @@ function  Chat() {
   }
 
   useEffect(() => {
-    const newSocket = io(`http://localhost:4000`);
+    const newSocket = io(`http://wecaresocket.pranavkv.online`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);

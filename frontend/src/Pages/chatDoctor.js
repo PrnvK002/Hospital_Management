@@ -25,7 +25,7 @@ function ChatDoctor() {
   const [messageData, setMessageData] = useState([]);
   const [user, setUser] = useState();
   useEffect(() => {
-    const newSocket = io(`http://wecaresocket.pranavkv.online`);
+    const newSocket = io(`https://wecaresocket.pranavkv.online`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);

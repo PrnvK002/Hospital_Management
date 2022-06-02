@@ -57,7 +57,7 @@ function  Chat() {
   }
 
   useEffect(() => {
-    const newSocket = io(`http://wecaresocket.pranavkv.online`);
+    const newSocket = io(`https://wecaresocket.pranavkv.online`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);
@@ -144,7 +144,7 @@ function  Chat() {
                 <p style={{ color: "red", position: "absolute" }}>{error}</p>
               )}
 
-              <Container style={{ height: '23.3rem', overflow: 'scroll' }}>
+              <Container style={{ height: '21rem', overflow: 'scroll' }}>
                 {messageData.length > 0
                   ? messageData.map((data) => {
                     return <MessageComponent {...data} key={data._id} />;
@@ -154,7 +154,7 @@ function  Chat() {
               <div
                 style={{
                   borderTop: " 1px solid  #4D4C7D",
-                  height: "auto",
+                  height: "4rem",
                   width: "100%",
                   position: "relative",
 

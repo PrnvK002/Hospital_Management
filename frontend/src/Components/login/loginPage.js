@@ -35,7 +35,7 @@ function Login() {
   //=================== Google login =====================
   const responseGoogle = (response) => {
     setUserData(response.profileObj);
-    if(response){
+    if(Object.keys(response).length>0){
       handleShow();
     }
   };
@@ -56,6 +56,7 @@ function Login() {
 
   //================ redirecting to home page ============
   useEffect(() => {
+    
     if (Object.keys(userInfo).length !== 0) {
       navigate("/");
     }

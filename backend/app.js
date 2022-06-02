@@ -27,7 +27,7 @@ connectDB();
 const app = express();
 
 //=========== Cors =================
-app.use(cors({ origin : "*" }));
+app.use(cors());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

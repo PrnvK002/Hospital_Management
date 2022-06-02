@@ -14,7 +14,7 @@ import generateToken from "../util/generateToken.js";
 
 export const authLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   const result = await loginSchema.validateAsync(req.body);
 
   let user = await User.findOne({ email: email });

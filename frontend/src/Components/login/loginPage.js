@@ -35,7 +35,9 @@ function Login() {
   //=================== Google login =====================
   const responseGoogle = (response) => {
     setUserData(response.profileObj);
-    handleShow();
+    if(response){
+      handleShow();
+    }
   };
 
   //========= React modal setup ===============

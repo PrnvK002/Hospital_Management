@@ -19,6 +19,9 @@ const io = new Server(server,{
 
 const users = {};
 
+app.use('/',(req,res)=>{
+  res.send("its working")
+});
 
 io.on("connect", (socket) => {
   

@@ -32,6 +32,7 @@ function Login() {
 
   //=================== Google login =====================
   const googleSuccess = (response) => {
+      console.log(response);
       if(response){
         dispatch(googleAuth(response.googleId));
       }

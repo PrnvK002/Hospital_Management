@@ -30,6 +30,7 @@ export const signupUser = createAsyncThunk("/signup", async (data) => {
 
 //==================== google login ==================
 export const googleAuth = createAsyncThunk('login/google/auth',async (data)=>{
+  console.log(data);
   const response = await Axios.post('/google/auth',data);
   return response.data;
 });
@@ -136,6 +137,17 @@ const userReducer = createSlice({
     [googleAuth.rejected]:(state,action)=>{
       state.loading = false;
       state.error = 'Google login failed';
+    },
+    [googleRegister.fulfilled]:(state,action)=>{
+      state.data = action.payload;
+      state.loading = false;
+    },
+    [googleRegister.pending]:(state,action)=>{
+      state.loading = true;
+    },
+    [googleRegister.rejected]:(state,action)=>{
+      state.error = 'Failed to register user';
+      state.loading = false;
     },
     logout: (state, action) => {
       console.log("Logged out");

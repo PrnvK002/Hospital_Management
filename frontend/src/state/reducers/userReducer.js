@@ -29,6 +29,19 @@ export const signupUser = createAsyncThunk("/signup", async (data) => {
   }
 });
 
+//==================== google login ==================
+export const googleAuth = createAsyncThunk('login/google/auth',async (data)=>{
+  const response = await Axios.post('/google/auth',data);
+  return response.data;
+});
+
+//==================== google register ===============
+export const googleRegister = createAsyncThunk('register/google/register',async (data)=>{
+  console.log(data);
+  const response = await Axios.post('/google/register',data);
+  return response.data;
+});
+
 //==================== create user ==================
 export const createUser = createAsyncThunk(
   "signup/create",
@@ -114,6 +127,17 @@ const userReducer = createSlice({
     [updateProfile.rejected]: (state, action) => {
       state.loading = false;
       state.error = 'Error occured while updating the profile';
+    },
+    [googleAuth.fulfilled]:(state,action)=>{
+      state.data = action.payload;
+      state.loading = false;
+    },
+    [googleAuth.pending]:(state,action)=>{
+      state.loadingl = true;
+    },
+    [googleAuth.rejected]:(state,action)=>{
+      state.loading = false;
+      state.error = 'Google login failed';
     },
     logout: (state, action) => {
       console.log("Logged out");

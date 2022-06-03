@@ -10,7 +10,9 @@ import {
   registerUser,
   sendOtp,
   getDoctors,
-  editProfile
+  editProfile,
+  googleAuthentication,
+  googleRegister
 } from "../controllers/userController.js";
 import authenticationMiddleware from "../middlewares/authentication.js";
 
@@ -28,6 +30,16 @@ router.post("/signup", registerUser);
 //@access public
 
 router.post("/sendOtp", sendOtp);
+
+//@desc route for google login permision
+//@access public
+
+router.post('/google/auth',googleAuthentication);
+
+//@desc route for google register
+//@access public
+
+router.post('/google/register',googleRegister)
 
 //@desc department specific doctors
 //@access public

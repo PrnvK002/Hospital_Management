@@ -45,7 +45,7 @@ function ChatDoctor() {
       newMessage = JSON.parse(newMessage);
       console.log(newMessage);
       const msg = newMessage.response[0];
-      setMessageData([...messageData,msg]);
+      setMessageData((prevState)=> [...prevState,msg]);
     }
 
     //==================== handling chat response ===========
@@ -70,11 +70,13 @@ function ChatDoctor() {
     const msg = { from: userInfo.username, message: message };
     const arr = [msg];
     messageData.length > 0 ? setMessageData([...messageData, msg]) : setMessageData(arr);
-
-    socket.emit(
-      "message",
-      JSON.stringify({ message, user: user, doctor: userInfo._id, isDoctor, conversationId })
-    );
+    if(message.length > 0){
+      socket.emit(
+        "message",
+        JSON.stringify({ message, user: user, doctor: userInfo._id, isDoctor, conversationId })
+      );
+        setMessage('');
+    }
   };
 
   //============== getting user chats =========

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser, createUser } from "../../state/reducers/userReducer";
+import { signupUser, createUser, googleRegister } from "../../state/reducers/userReducer";
 import singupImage from "../../Assets/background/signup_side.svg";
 import AlertMessage from "../Alert/Alert";
 
@@ -39,10 +39,15 @@ function Signup() {
 
   //=========== Google signup setup ====================
   const [userData, setUser] = useState();
-  const responseGoogle = (response) => {
+  const [googleLogin,setGoogleLogin] = useState(false);
+  const googleSuccess = (response) => {
     setUser(response.profileObj);
+    setGoogleLogin(true);
     handleShow();
   };
+  const googleFailure = (response) =>{
+    console.log(response);
+  }
 
   //========= React modal setup ===============
   const [show, setShow] = useState(false);
@@ -88,7 +93,11 @@ function Signup() {
     if (otp === userInfo.otp) {
       setSuccess(true);
       handleOtpClose();
-      dispatch(createUser(userInfo));
+      if(googleLogin === true ){
+          dispatch(googleRegister(userInfo))
+      }else{
+        dispatch(createUser(userInfo));
+      }
     } else {
       setOtpError("Invalid OTP");
     }
@@ -399,8 +408,8 @@ function Signup() {
               <GoogleLogin
                 clientId="511456651501-fugmj6urs7bl4j0k02e6lcsvhkn16g8b.apps.googleusercontent.com"
                 buttonText="Signup With Google"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
+                onSuccess={googleSuccess}
+                onFailure={googleFailure}
                 cookiePolicy={"single_host_origin"}
               />
             </div>

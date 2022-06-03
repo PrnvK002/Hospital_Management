@@ -52,7 +52,7 @@ export const authLogin = asyncHandler(async (req, res) => {
 //@access public
 
 export const registerUser = asyncHandler(async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const result = await signupSchema.validateAsync(req.body);
 
   let user = await User.findOne({ email: req.body.email });
@@ -78,6 +78,62 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc route for google register 
+//@access public
+//@route post /google/register
+
+export const googleRegister = asyncHandler(async (req,res)=>{
+  const userAlreadyExist = await User.findOne({ email : req.body.email });
+  if(userAlreadyExist){
+    res.status(400);
+    throw new Error(`${req.body.email} is already registered`);
+  }
+  const encryptPassword =  await bcrypt.hash(req.body.password, 10);
+  const createUser = await User.create({
+    googleId : req.body.googleId,
+    user_name: req.body.username,
+    email: req.body.email,
+    password: encryptPassword,
+    gender: req.body.gender,
+    phone: req.body.phone,
+    age: req.body.age,
+
+  });
+
+  if(createUser){
+    res.status(201).json({});
+  }
+  else{
+    res.status(400);
+    throw new Error("Error occured while creating the user");
+  }
+});
+
+//@desc route for google login permision
+//@access public
+//@route post /google/auth
+
+
+export const googleAuthentication = asyncHandler(async (req,res)=>{
+  const { googleId } = req.body;
+  const user = await User.findOne({ googleId : googleId });
+  if(user){
+    res.status(200).json({ 
+      _id: user._id,
+      email: user.email,
+      username: user.user_name,
+      role: user.role,
+      age: user.age,
+      phone: user.phone,
+      gender: user.gender,
+      authToken: generateToken(user._id),
+     });
+  }else{
+    res.status(401);
+    throw new Error('User not registerd');
+  }
+}) 
+
 //@desc otp verification
 //@route POST /sendOtp
 //@access public
@@ -95,7 +151,7 @@ export const sendOtp = async (req, res) => {
     lowerCaseAlphabets: false,
   });
   console.log(otp);
-  // sendSms(phone, otp);
+  sendSms(phone, otp);
   res.json({ otp: otp });
 
   // res.status(401);

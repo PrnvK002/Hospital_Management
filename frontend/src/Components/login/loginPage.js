@@ -3,7 +3,7 @@ import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../../state/reducers/userReducer";
+import { googleAuth, loginUser } from "../../state/reducers/userReducer";
 import { GoogleLogin } from "react-google-login";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import Loader from "../Loading/loader";
@@ -18,8 +18,6 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [userData, setUserData] = useState({});
-
   // ====================== Form submit section ===================
   const {
     register,
@@ -33,26 +31,15 @@ function Login() {
   };
 
   //=================== Google login =====================
-  const responseGoogle = (response) => {
-    setUserData(response.profileObj);
-    if(Object.keys(response).length>0){
-      handleShow();
-    }
+  const googleSuccess = (response) => {
+      if(response){
+        dispatch(googleAuth(response.googleId));
+      }
   };
 
-  //========= React modal setup ===============
-  const [show, setShow] = useState(false);
-  const [password, setPassword] = useState("");
-  const [passwordErr, setPasswordErr] = useState("");
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const submitPassword = () => {
-    if (password.length > 6) {
-      handleClose();
-      dispatch(loginUser({ email: userData.email, password: password }));
-    }
-    setPasswordErr("Password must contain atlest 7 characters");
-  };
+  const googleFailure = (response) => {
+    console.log(response);
+  }
 
   //================ redirecting to home page ============
   useEffect(() => {
@@ -71,39 +58,6 @@ function Login() {
 
         {/* loading setup start */}
 
-        {/* React Modal Setup start */}
-
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Enter Your Password</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {passwordErr ? (
-              <p style={{ color: "red", fontSize: "10px" }}> {passwordErr} </p>
-            ) : (
-              ""
-            )}
-            <input
-              type="password"
-              className="inputLogin"
-              placeholder="Enter your Password"
-              name="password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={submitPassword}>
-              Submit
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        {/* React Modal Setup end */}
         <Row className = " mt-5 ">
           <Col className="text-center">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,8 +123,8 @@ function Login() {
                 <GoogleLogin
                   clientId="511456651501-fugmj6urs7bl4j0k02e6lcsvhkn16g8b.apps.googleusercontent.com"
                   buttonText="Login with google"
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
+                  onSuccess={googleSuccess}
+                  onFailure={googleFailure}
                   cookiePolicy={"single_host_origin"}
                 />
               </div>

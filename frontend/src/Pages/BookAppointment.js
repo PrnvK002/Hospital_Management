@@ -7,6 +7,7 @@ import AlertMessage from "../Components/Alert/Alert";
 import Card from "../Components/Cards/DoctorCard";
 import Loader from "../Components/Loading/loader";
 import AppointmentModal from "../Components/Modal/AppointmentModal";
+import MoreInfoModal from "../Components/Modal/MoreInfoModal";
 
 function BookAppointment() {
   const navigate = useNavigate();
@@ -43,6 +44,24 @@ function BookAppointment() {
     }
   },[dataChanged,navigate]);
 
+  //================== More doctor info props ================
+  const [ showMore , setShowMore ] = useState(false);
+  const handleMoreClose = ()=>{
+    setShowMore(false);
+  }
+  const handleMoreShow = () => {
+    setShowMore(true);
+  }
+  const moreUserData = useSelector((state)=>state.moreInfo);
+  const moreInfoData = useSelector((state) => state.moreInfo.data);
+  const moreInfoProps = { show : showMore , handleClose : handleMoreClose , showConfirm : false , moreUserData };
+
+  useEffect(()=>{
+    if(Object.keys(moreInfoData).length > 0){
+      handleMoreShow();
+    }
+  },[moreInfoData])
+
   return (
     <>
       <Container className="mt-5">
@@ -52,6 +71,11 @@ function BookAppointment() {
           {" "}
           {departmentName}{" "}
         </h3>
+        {/* MOre info modal start */}
+
+        <MoreInfoModal { ...moreInfoProps } />
+
+        {/* MOre info modal end */}
         {Loading && <Loader />}
         {loading && <Loader />}
         {error && <AlertMessage {...errorProps} />}

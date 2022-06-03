@@ -15,6 +15,7 @@ function Cards({ _id , departmentName , description ,image , rating , setError }
       navigate(`/bookAppointment/${_id}/${departmentName}`);
     }else{
       setError('User Not logged in please login to book appointments');
+      navigate('/login');
     }
    }
 

@@ -206,7 +206,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 export const moreUserInfo = asyncHandler(async (req, res) => {
   try {
     const id = req.params.id;
-    const user = await User.findOne({ _id: id }, { password: 0 });
+    const user = await User.findOne({ _id: id }, { password: 0 }).populate('department','departmentName');
     if (user) {
       res.status(200).json({ user });
     }

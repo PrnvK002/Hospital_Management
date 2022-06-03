@@ -15,13 +15,13 @@ function MoreInfoModal( { show , handleClose , showConfirm , moreUserData  } ) {
           {error && <p style={{color:"red"}} >{error}</p>}
           {Object.keys(data).length > 0 ? (
             <div>
-              <p> {data.user_name} </p>
-              <p> {data.email} </p>
-              <p> {data.phone} </p>
-              <p> {data.role} </p>
-              <p> {data.age} </p>
-              <p> {data.department ? data.department : ""} </p>
-              <p> {data.salary ? data.salary : ""} </p>
+              <p> Name : {data.user_name} </p>
+              <p> Email: {data.email} </p>
+              <p> Phone : {data.phone} </p>
+              <p> { showConfirm === false ? '' :  `Position : ${data.role}`} </p>
+              <p> Age : {data.age} </p>
+              <p> {data.department ? `Department name : ${data.department}` : ""} </p>
+              <p> { showConfirm === false ?  '': data.salary ? `Salary : ${data.salary}` : ""  }</p>
             </div>
           ) : (
             ""

@@ -83,21 +83,22 @@ export const registerUser = asyncHandler(async (req, res) => {
 //@route post /google/register
 
 export const googleRegister = asyncHandler(async (req,res)=>{
+  console.log(req.body);
   const userAlreadyExist = await User.findOne({ email : req.body.email });
   if(userAlreadyExist){
     res.status(400);
     throw new Error(`${req.body.email} is already registered`);
   }
   const encryptPassword =  await bcrypt.hash(req.body.password, 10);
+  const username = req.body.givenName + req.body.familyName;
   const createUser = await User.create({
     googleId : req.body.googleId,
-    user_name: req.body.username,
+    user_name: username,
     email: req.body.email,
     password: encryptPassword,
     gender: req.body.gender,
     phone: req.body.phone,
     age: req.body.age,
-
   });
 
   if(createUser){

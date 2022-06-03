@@ -22,7 +22,6 @@ export const updateProfile = createAsyncThunk('user/update', async (data, { getS
 
 //===================== send otp user ===============
 export const signupUser = createAsyncThunk("/signup", async (data) => {
-  console.log(data);
   const response = await Axios.post("/sendOtp", { phone: data.phone });
   if (response.data.otp) {
     return { ...data, otp: response.data.otp };
@@ -37,7 +36,6 @@ export const googleAuth = createAsyncThunk('login/google/auth',async (data)=>{
 
 //==================== google register ===============
 export const googleRegister = createAsyncThunk('register/google/register',async (data)=>{
-  console.log(data);
   const response = await Axios.post('/google/register',data);
   return response.data;
 });

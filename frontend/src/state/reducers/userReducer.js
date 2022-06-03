@@ -31,7 +31,7 @@ export const signupUser = createAsyncThunk("/signup", async (data) => {
 //==================== google login ==================
 export const googleAuth = createAsyncThunk('login/google/auth',async (data)=>{
   console.log(data);
-  const response = await Axios.post('/google/auth',data);
+  const response = await Axios.post('/google/auth',{ googleId : data});
   return response.data;
 });
 

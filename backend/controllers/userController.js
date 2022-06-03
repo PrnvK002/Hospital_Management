@@ -116,7 +116,6 @@ export const googleRegister = asyncHandler(async (req,res)=>{
 
 
 export const googleAuthentication = asyncHandler(async (req,res)=>{
-  console.log(req.body);
   const { googleId } = req.body;
   const user = await User.findOne({ googleId : googleId });
   if(user){

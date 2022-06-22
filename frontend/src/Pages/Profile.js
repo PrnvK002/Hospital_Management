@@ -48,7 +48,7 @@ function Profile() {
         if (updated) {
             dispatch(resetUpdate());
         }
-    }, [updated]);
+    }, [updated,dispatch]);
 
 
     return (
@@ -81,11 +81,28 @@ function Profile() {
                                                         <h3> {data ? data.user_name : ''} </h3>
                                                     </div>
                                                     <Container className="mt-5" style={{ marginLeft: '15rem' }} >
-                                                        <p> Email Address : <span className="ms-5" > {data ? data.email : ''} </span> </p>
-                                                        <p> Gender : <span className="ms-5" > {data ? data.gender : ''} </span> </p>
-                                                        <p> Age : <span className="ms-5" > {data ? data.age : ''} </span> </p>
-                                                        <p> Phone : <span className="ms-5" > {data ? data.phone : ''} </span> </p>
-
+                                                        <table style={{ border : "none" }} >
+                                                            <tr>
+                                                                <td > Email Address </td>
+                                                                <td className="ps-3" > : </td>
+                                                                <td className="ps-3" > {data ? data.email : ''}  </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Gender </td>
+                                                                <td className="ps-3" > : </td>
+                                                                <td className="ps-3" > {data ? data.gender : ''}  </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Age </td>
+                                                                <td className="ps-3" > : </td>
+                                                                <td className="ps-3" > {data ? data.age : ''}  </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Phone </td>
+                                                                <td className="ps-3" > : </td>
+                                                                <td className="ps-3" > {data ? data.phone : ''}  </td>
+                                                            </tr>
+                                                        </table> 
                                                     </Container>
                                                 </Container>
                                             </Tab.Pane>

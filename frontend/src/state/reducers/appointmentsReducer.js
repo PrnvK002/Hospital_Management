@@ -5,15 +5,19 @@ import Axios from "../../axios";
 
 export const getAppointments = createAsyncThunk(
   "appointments/get/doctor",
-  async (pageNumber, { getState }) => {
+  async (pageNumber, { getState , rejectWithValue }) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(
-      `/appointment/getAppointment?page=${pageNumber}&role=doctor&state=active`,
-      { headers: { authorization: `Bearer ${userInfo.authToken}` } }
-    );
-    console.log(response);
-    return response.data.appointments;
+    try{
+      const response = await Axios.get(
+        `/appointment/getAppointment?page=${pageNumber}&role=doctor&state=active`,
+        { headers: { authorization: `Bearer ${userInfo.authToken}` } }
+      );
+      console.log(response);
+      return response.data.appointments;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -21,16 +25,20 @@ export const getAppointments = createAsyncThunk(
 
 export const getAllAppointmetns = createAsyncThunk(
   "appointments/get/staff",
-  async (data, { getState }) => {
+  async (data, { getState , rejectWithValue }) => {
     const { page , status } = data;
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(
-      `/appointment/getAppointment?page=${page}&role=staff&state=${status}`,
-      { headers: { authorization: `Bearer ${userInfo.authToken}` } }
-    );
-    console.log(response);
-    return response.data.appointments;
+    try{
+      const response = await Axios.get(
+        `/appointment/getAppointment?page=${page}&role=staff&state=${status}`,
+        { headers: { authorization: `Bearer ${userInfo.authToken}` } }
+      );
+      console.log(response);
+      return response.data.appointments;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -38,14 +46,20 @@ export const getAllAppointmetns = createAsyncThunk(
 
 export const getActiveAppointments = createAsyncThunk(
   "appointments/active/get",
-  async (status, { getState }) => {
+  async (status, { getState,rejectWithValue }) => {
+    
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/appointment/getActive/${status}`, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    console.log(response);
-    return response.data.appointment;
+    try{
+      const response = await Axios.get(`/appointment/getActive/${status}`, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      console.log(response);
+      return response.data.appointment;
+    }catch(err){
+      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -53,13 +67,17 @@ export const getActiveAppointments = createAsyncThunk(
 
 export const cancelAppointment = createAsyncThunk(
   "appointment/cancel",
-  async (id, { getState }) => {
+  async (id, { getState , rejectWithValue }) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.patch("/appointment/cancel", {id : id}, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    return response.data;
+    try{
+      const response = await Axios.patch("/appointment/cancel", {id : id}, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      return response.data;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -67,14 +85,18 @@ export const cancelAppointment = createAsyncThunk(
 
 export const fixAppointment = createAsyncThunk(
   "appointments/add",
-  async (data, { getState }) => {
+  async (data, { getState , rejectWithValue }) => {
     console.log(data);
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post("/appointment", data, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    return response.data.data;
+    try{
+      const response = await Axios.post("/appointment", data, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      return response.data.data;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -82,13 +104,17 @@ export const fixAppointment = createAsyncThunk(
 
 export const getAppointmentHistory = createAsyncThunk(
   "appointments/get/history",
-  async (page, { getState }) => {
+  async (page, { getState , rejectWithValue }) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/appointment/history/${page}`, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    return response.data.appointments;
+    try{
+      const response = await Axios.get(`/appointment/history/${page}`, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      return response.data.appointments;
+    }catch(err){
+      return rejectWithValue(err.response.data)
+    }
   }
 );
 
@@ -120,7 +146,7 @@ const appointmentReducer = createSlice({
       state.loading = false;
     },
     [getAppointments.rejected]: (state, action) => {
-      state.error = "Cannot get Appointments";
+      state.error = action.payload.message;
       state.loading = false;
     },
     [fixAppointment.fulfilled]: (state, action) => {
@@ -133,7 +159,7 @@ const appointmentReducer = createSlice({
     },
     [fixAppointment.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Cannot get fixed appointment";
+      state.error = action.payload.message;
     },
     [getAppointmentHistory.fulfilled]: (state, action) => {
       state.loading = false;
@@ -145,7 +171,7 @@ const appointmentReducer = createSlice({
     },
     [getAppointmentHistory.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Cannot get appointment History";
+      state.error = action.payload.message;
     },
     [cancelAppointment.fulfilled]: (state, action) => {
       state.loading = false;
@@ -155,7 +181,7 @@ const appointmentReducer = createSlice({
       state.loading = true;
     },
     [cancelAppointment.rejected]: (state, action) => {
-      state.error = "Errror occured while canceling the appointment";
+      state.error = action.payload.message;
       state.loading = false;
     },
     [getAllAppointmetns.fulfilled]: (state, action) => {
@@ -167,7 +193,7 @@ const appointmentReducer = createSlice({
     },
     [getAllAppointmetns.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Cannot get appointments";
+      state.error = action.payload.message;
     },
     [getActiveAppointments.fulfilled]: (state, action) => {
       state.appointments = action.payload || [] ;
@@ -178,7 +204,7 @@ const appointmentReducer = createSlice({
     },
     [getActiveAppointments.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Cannot find Active appointments";
+      state.error = action.payload.message;
     },
   },
 });

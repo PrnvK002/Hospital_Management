@@ -3,29 +3,37 @@ import Axios from "../../axios";
 
 //================== Getting all departments ==========================
 
-export const getDepartments = createAsyncThunk("departments/get", async () => {
-  const response = await Axios.get("/department");
-  return response.data.departments;
+export const getDepartments = createAsyncThunk("departments/get", async (_,{rejectWithValue}) => {
+  try{
+    const response = await Axios.get("/department");
+    return response.data.departments;
+  }catch(err){
+    return rejectWithValue(err.response.data);
+  }
 });
 
 //================== Adding departments ===================================
 
 export const addDepartment = createAsyncThunk(
   "departments/add",
-  async (data,{getState}) => {
+  async (data,{getState,rejectWithValue}) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post(
-      "/department",
-      data,
-      {
-        headers: {
-          authorization: `Bearer ${userInfo.authToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data.data;
+    try{
+      const response = await Axios.post(
+        "/department",
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.data;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -33,15 +41,19 @@ export const addDepartment = createAsyncThunk(
 
 export const removeDepartment = createAsyncThunk(
   "department/remove",
-  async (id,{getState}) => {
+  async (id,{getState,rejectWithValue}) => {
     console.log('reaching removeDepartment');
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.delete(`/department/${id}`, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    console.log(response);
-    return response.data;
+    try{
+      const response = await Axios.delete(`/department/${id}`, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      console.log(response);
+      return response.data;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -74,7 +86,7 @@ const departmentReducer = createSlice({
     },
     [getDepartments.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Cannot find Departments";
+      state.error = action.payload.message;
     },
     [addDepartment.fulfilled]: (state, action) => {
       state.loading = false;
@@ -86,7 +98,7 @@ const departmentReducer = createSlice({
     },
     [addDepartment.rejected]: (state, action) => {
       console.log(action);
-      state.error = "Error occured while adding new Department";
+      state.error = action.payload.message;
       state.loading = false
     },
     [removeDepartment.fulfilled]: (state, action) => {
@@ -100,7 +112,7 @@ const departmentReducer = createSlice({
     },
     [removeDepartment.rejected]: (state, action) => {
       state.loading = false;
-      state.error = "Error occured while removing the department";
+      state.error = action.payload.message;
     },
   },
 });

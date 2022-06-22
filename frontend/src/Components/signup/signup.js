@@ -31,10 +31,15 @@ function Signup() {
   //====================== Form submision ============================
 
   const dispatch = useDispatch();
+  const [passwrdErr,setPassErr] = useState('');
   const onSubmit = (data) => {
     console.log(data);
-    dispatch(signupUser(data));
-    handleShowOtp();
+    if(data.password === data.confirm_password ){
+      dispatch(signupUser(data));
+      handleShowOtp();
+    }else{
+      setPassErr('Passwords not matching');
+    }
   };
 
   //=========== Google signup setup ====================
@@ -82,21 +87,22 @@ function Signup() {
 
   const [otp, setOtp] = useState("");
   const [otpShow, setOtpShow] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [otpError, setOtpError] = useState("");
   const handleOtpClose = () => setOtpShow(false);
   const handleShowOtp = () => setOtpShow(true);
 
-  const userInfo = useSelector((state) => state.userLogin.data);
+  const signupTemp = useSelector((state) => state.userLogin.signupTemp);
+  const success = useSelector((state)=>state.userLogin.success);
+  const err = useSelector((state)=>state.userLogin.error);
 
   const submitOtp = () => {
-    if (otp === userInfo.otp) {
-      setSuccess(true);
+    if (otp === signupTemp.otp) {
       handleOtpClose();
       if(googleLogin === true ){
-          dispatch(googleRegister(userInfo))
+          dispatch(googleRegister(signupTemp))
       }else{
-        dispatch(createUser(userInfo));
+        console.log("signup temp",signupTemp);
+        dispatch(createUser(signupTemp));
       }
     } else {
       setOtpError("Invalid OTP");
@@ -109,11 +115,30 @@ function Signup() {
     message: "Successfully created the user",
   };
 
+  //========= Redirect to login page on success ========
+  useEffect(()=>{
+    if(success === true){
+      navigate('/login');
+    }
+  },[success,navigate])
+
+  //========== Error props ======
+  const errorProps = {
+    variant : 'danger',
+    message : err
+  }
+
+  //=============== Password not matching props =====
+
+  const passwordProps = {
+    variant : 'danger',
+    message : passwrdErr
+  }
+
   return (
     <>
 
-      {success && <AlertMessage {...props} />}
-
+      
       {/* React Modal Setup start */}
 
       <Modal show={show} onHide={handleClose}>
@@ -226,6 +251,9 @@ function Signup() {
         <Col md className=" text-center  ">
           <form onSubmit={handleSubmit(onSubmit)}>
             <h1 style={{ color: "#4D4C7D" }}> Welcome To Our Family... </h1>
+            {success && <AlertMessage {...props} />}
+            { err && <AlertMessage { ...errorProps } /> }
+            { passwordErr && <AlertMessage { ...passwordProps } /> }
             <div className="input">
               {errors.username && (
                 <p style={{ color: "red", fontSize: "0.8rem" }}>

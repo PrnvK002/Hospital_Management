@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
-import { googleAuth, loginUser } from "../../state/reducers/userReducer";
+import { googleAuth, loginUser, resetSuccess } from "../../state/reducers/userReducer";
 import { GoogleLogin } from "react-google-login";
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Loader from "../Loading/loader";
 import LoginImage from "../../Assets/background/login_side.svg";
+import AlertMessage from "../Alert/Alert";
 
 function Login() {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function Login() {
   const userInfo = useSelector((state) => state.userLogin.data);
   const loading = useSelector((state) => state.userLogin.loading);
   const error = useSelector((state) => state.userLogin.error);
+  const success = useSelector((state)=>state.userLogin.success);
 
   const navigate = useNavigate();
 
@@ -42,13 +44,22 @@ function Login() {
     console.log(response);
   }
 
+   //==== Success alert props =====
+   const props = {
+    variant: "success",
+    message: "Successfully created the user",
+  };
+
   //================ redirecting to home page ============
   useEffect(() => {
     
     if (Object.keys(userInfo).length !== 0) {
       navigate("/");
     }
-  }, [navigate, userInfo]);
+    return ()=>{
+      dispatch(resetSuccess());
+    }
+  }, [navigate, userInfo,dispatch]);
 
   return (
     <>
@@ -63,6 +74,7 @@ function Login() {
           <Col className="text-center">
             <form onSubmit={handleSubmit(onSubmit)}>
               <h1 style={{ color : "#4D4C7D" }}  > Check In </h1>
+              {success && <AlertMessage {...props} />}
               <div className="">
                 {error && (
                   <p style={{ color: "red", fontSize: "0.8rem" }}>{error}</p>

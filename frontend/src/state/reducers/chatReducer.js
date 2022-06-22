@@ -3,12 +3,16 @@ import Axios from '../../axios';
 
 
 //=================== getting all messages ===========================
-export const getAllMessages = createAsyncThunk('chat/get',async( id , { getState } )=>{
+export const getAllMessages = createAsyncThunk('chat/get',async( id , { getState, rejectWithValue } )=>{
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/chat/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
-    console.log(response);
-    return response.data.messages;
+    try{
+        const response = await Axios.get(`/chat/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+        console.log(response);
+        return response.data.messages;
+    }catch(err){
+        return rejectWithValue(err.response.data);
+    }
 });
 
 const chatReducer = createSlice({
@@ -28,7 +32,7 @@ const chatReducer = createSlice({
         },
         [ getAllMessages.rejected ] : (state,action) => {
             state.loading = false;
-            state.error = 'No chat history';
+            state.error = action.payload.message;
         }
     }
 });

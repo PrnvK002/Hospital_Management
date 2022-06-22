@@ -3,22 +3,29 @@ import Axios from '../../axios';
 
 //============ Adding medicines ================
 
-export const addMedicine = createAsyncThunk('medicine/add',async (data,{getState})=>{
+export const addMedicine = createAsyncThunk('medicine/add',async (data,{getState,rejectWithValue})=>{
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post('/medicine',data,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
-    console.log(response);
-    return response.data.data;
+    try{
+        const response = await Axios.post('/medicine',data,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+        console.log(response);
+        return response.data.data;
+    }catch(err){
+        return rejectWithValue(err.response.data);
+    }
 });
 
 //============== getting medicines ============
 
-export const getMedicineDetails = createAsyncThunk('medicine/get',async (page,{getState})=>{
+export const getMedicineDetails = createAsyncThunk('medicine/get',async (page,{getState,rejectWithValue})=>{
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/medicine?page=${page}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
-    console.log(response);
-    return response.data.medicineData;
+    try{
+        const response = await Axios.get(`/medicine?page=${page}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+        return response.data.medicineData;
+    }catch(err){
+        return rejectWithValue(err.response.data);
+    }
 });
 
 
@@ -47,7 +54,7 @@ const medicineReducer = createSlice({
             state.loading = true;
         },
         [ addMedicine.rejected ] : (state,action) =>{
-            state.error = 'Error occured while adding medicine';
+            state.error = action.payload.message;
             state.loading = false;
         },
         [getMedicineDetails.fulfilled] : (state,action) => {
@@ -58,7 +65,7 @@ const medicineReducer = createSlice({
             state.loading = true;
         },
         [getMedicineDetails.rejected] : (state,action) => {
-            state.error = 'No medicine Details found';
+            state.error = action.payload.message;
             state.loading =false;
         }
     }

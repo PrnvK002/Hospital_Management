@@ -2,13 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../axios";
 
 //================ getting more information about a perticular user ===================
-export const getMoreInfo = createAsyncThunk("moreInfo", async (id,{getState}) => {
+export const getMoreInfo = createAsyncThunk("moreInfo", async (id,{getState,rejectWithValue}) => {
   console.log(id);
   const state = getState();
   const userInfo = state.userLogin.data;
-  const response = await Axios.get(`/user/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
-  console.log(response);
-  return response.data.user;
+  try{
+    const response = await Axios.get(`/user/${id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+    return response.data.user;
+  }catch(err){
+    return rejectWithValue(err.response.data);
+  }
 });
 
 //================= Slice for moreInfo data ========================
@@ -36,7 +39,7 @@ const moreInfo = createSlice({
     [getMoreInfo.rejected]: (state, action) => {
       console.log(action);
       state.data = {};
-      state.error = "Error occured while getting more info";
+      state.error = action.payload.message;
       state.loading = false;
     },
   },

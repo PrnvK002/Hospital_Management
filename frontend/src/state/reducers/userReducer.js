@@ -4,59 +4,86 @@ import Axios from "../../axios";
 //================= login user ===================
 export const loginUser = createAsyncThunk(
   "/login",
-  async ({ email, password }) => {
-    const response = await Axios.post("/login", { email, password });
-    return response.data;
+  async ({ email, password },{rejectWithValue}) => {
+    try{
+      const response = await Axios.post("/login", { email, password });
+      return response.data;
+    }catch(err){
+      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
 //================= Profile Update ==============
 
-export const updateProfile = createAsyncThunk('user/update', async (data, { getState }) => {
+export const updateProfile = createAsyncThunk('user/update', async (data, { getState , rejectWithValue }) => {
   const state = getState();
   const userInfo = state.userLogin.data;
-  const response = await Axios.put('/profile', data, { headers: { authorization: `Bearer ${userInfo.authToken}` } });
-  // console.log(response);
-  return response.data;
+  try{
+    const response = await Axios.put('/profile', data, { headers: { authorization: `Bearer ${userInfo.authToken}` } });
+    // console.log(response);
+    return response.data;
+  }catch(err){
+    return rejectWithValue(err.response.data);
+  }
 })
 
 //===================== send otp user ===============
-export const signupUser = createAsyncThunk("/signup", async (data) => {
-  const response = await Axios.post("/sendOtp", { phone: data.phone });
-  if (response.data.otp) {
+export const signupUser = createAsyncThunk("/signup", async (data,{rejectWithValue}) => {
+
+  try{
+    const response = await Axios.post("/sendOtp", { phone: data.phone });
+    if (response.data.otp) {
     return { ...data, otp: response.data.otp };
+    }
+  }catch(err){
+    return rejectWithValue(err.response.data);
   }
 });
 
 //==================== google login ==================
-export const googleAuth = createAsyncThunk('login/google/auth',async (data)=>{
-  console.log(data);
-  const response = await Axios.post('/google/auth',{ googleId : data});
-  return response.data;
+export const googleAuth = createAsyncThunk('login/google/auth',async (data,{rejectWithValue})=>{
+  try{
+    const response = await Axios.post('/google/auth',{ googleId : data});
+    return response.data;
+  }catch(err){
+    return rejectWithValue(err.response.data);
+  }
 });
 
 //==================== google register ===============
-export const googleRegister = createAsyncThunk('register/google/register',async (data)=>{
-  const response = await Axios.post('/google/register',data);
-  return response.data;
+export const googleRegister = createAsyncThunk('register/google/register',async (data,{rejectWithValue})=>{
+  try{
+    const response = await Axios.post('/google/register',data);
+    return response.data;
+  }catch(err){
+    return rejectWithValue(err.response.data);
+  }
 });
 
 //==================== create user ==================
 export const createUser = createAsyncThunk(
   "signup/create",
-  async (userData) => {
-    localStorage.removeItem("userInfo");
+  async (userData,{rejectWithValue}) => { 
+    console.log(userData,'dsfsafsf');
     const data = {
       email: userData.email,
-      username: userData.name,
+      username: userData.username,
       password: userData.password,
       confirm_password: userData.password,
       gender: userData.gender,
       phone: userData.phone,
       age: userData.age,
     };
-    const response = await Axios.post("/signup", { ...data });
-    return response.data;
+    try{
+      const response = await Axios.post("/signup", { ...data });
+      return response.data;
+    }catch(err){
+      console.log(err);
+      console.log(err.response);
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -70,13 +97,18 @@ const userInfoFromStorage = localStorage.getItem("userInfo")
 const userReducer = createSlice({
   name: "userLogin",
   initialState: {
+    signupTemp:{},
     data: userInfoFromStorage,
     error: "",
+    success:false,
     loading: false,
+  },reducers:{
+    resetSuccess:(state,action)=>{
+      state.success = false;
+    }
   },
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
-      console.log(action.payload);
       localStorage.setItem("userInfo", JSON.stringify(action.payload));
       state.data = action.payload;
       state.loading = false;
@@ -85,25 +117,23 @@ const userReducer = createSlice({
       state.loading = true;
     },
     [loginUser.rejected]: (state, action) => {
-      console.log("------rejected---------");
-      console.log(action);
-      state.error = "Invalid credentials";
+      state.error = action.payload.message;
       state.loading = false;
     },
     [signupUser.fulfilled]: (state, action) => {
-      state.data = action.payload;
+      state.signupTemp = action.payload;
       state.loading = false;
     },
     [signupUser.pending]: (state, action) => {
       state.loading = true;
     },
     [signupUser.rejected]: (state, action) => {
-      state.error =
-        "Some error occured please check the credentials you entered";
+      state.error =action.payload.message;
       state.loading = false;
     },
     [createUser.fulfilled]: (state, action) => {
       state.data = action.payload;
+      state.success = true;
       state.loading = false;
       state.error = "";
     },
@@ -111,7 +141,7 @@ const userReducer = createSlice({
       state.loading = true;
     },
     [createUser.rejected]: (state, action) => {
-      state.error = "Error occured while creating the user";
+      state.error = action.payload.message;
       state.loading = false;
     },
     [updateProfile.fulfilled]: (state, action) => {
@@ -125,7 +155,7 @@ const userReducer = createSlice({
     },
     [updateProfile.rejected]: (state, action) => {
       state.loading = false;
-      state.error = 'Error occured while updating the profile';
+      state.error = action.payload.message;
     },
     [googleAuth.fulfilled]:(state,action)=>{
       state.data = action.payload;
@@ -136,7 +166,7 @@ const userReducer = createSlice({
     },
     [googleAuth.rejected]:(state,action)=>{
       state.loading = false;
-      state.error = 'Google login failed';
+      state.error = action.payload.message;
     },
     [googleRegister.fulfilled]:(state,action)=>{
       state.data = action.payload;
@@ -146,11 +176,10 @@ const userReducer = createSlice({
       state.loading = true;
     },
     [googleRegister.rejected]:(state,action)=>{
-      state.error = 'Failed to register user';
+      state.error = action.payload.message;
       state.loading = false;
     },
     logout: (state, action) => {
-      console.log("Logged out");
       state.data = {};
       state.loading = false;
       state.error = "";
@@ -159,6 +188,6 @@ const userReducer = createSlice({
   },
 });
 
-export const { resetUpdate } = userReducer.actions;
+export const { resetUpdate , resetSuccess } = userReducer.actions;
 
 export default userReducer.reducer;

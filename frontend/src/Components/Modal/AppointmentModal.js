@@ -31,29 +31,51 @@ function AppointmentModal({
 
   return (
     <>
-      <Modal show={show} onHide={handleClose} className="text-center" >
+      <Modal show={show} onHide={handleClose}  >
         <Modal.Header closeButton>
           <Modal.Title>Appointment Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Name of the Doctor : {doctorData.doctorName}</p>
-          <p>Name of the Department : {departmentName}</p>
-          <p>Time : {doctorData.workShift}</p>
-          <p>Booking fee : 50RS</p>
-          <Row callName="d-flex">
-            <label htmlFor="datePicker">Choose date : </label>
-            <DatePicker
-              selected={date}
-              minDate={today}
-              dateFormat="dd-MM-yyyy"
-              onChange={(date) => {
-                setDate(date);
-                console.log(date);
-              }}
-            />
-          </Row>
+          <table style={{ border: "none" }} >
+            <tr>
+              <td> Name of the Doctor </td>
+              <td className="px-3" > : </td>
+              <td> {doctorData.doctorName} </td>
+            </tr>
+            <tr>
+              <td> Name of the Department </td>
+              <td className="px-3" > : </td>
+              <td> {departmentName} </td>
+            </tr>
+            <tr>
+              <td> Time </td>
+              <td className="px-3" > : </td>
+              <td> {doctorData.doctorName} </td>
+            </tr>
+            <tr>
+              <td> Booking fee </td>
+              <td className="px-3" > : </td>
+              <td> 50 RS </td>
+            </tr>
+            <tr>
+              <td> Choose Date </td>
+              <td className="px-3" > : </td>
+              <td>
+                <DatePicker
+                  selected={date}
+                  minDate={today}
+                  dateFormat="dd-MM-yyyy"
+                  onChange={(date) => {
+                    setDate(date);
+                    console.log(date);
+                  }}
+                /> </td>
+            </tr>
+          </table>
+          <Row className="text-center" >
+
           <GooglePayButton
-            style={{ "margin-top" :"6px" }}
+            style={{ "margin-top": "6px" }}
             environment="TEST"
             paymentRequest={{
               apiVersion: 2,
@@ -93,6 +115,7 @@ function AppointmentModal({
               console.log(err);
             }}
           />
+          </Row>
         </Modal.Body>
       </Modal>
     </>

@@ -2,22 +2,29 @@ import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from '../../axios';
 
 //============= Add prescription ==================
-export const addPrescription = createAsyncThunk('prescription/add',async (data,{getState})=> {
+export const addPrescription = createAsyncThunk('prescription/add',async (data,{getState,rejectWithValue})=> {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post('/medicine/prescription',data,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
-    console.log(response);
-    return response.data.prescriptionData;
+    try{
+        const response = await Axios.post('/medicine/prescription',data,{ headers : { authorization : `Bearer ${userInfo.authToken}` } });
+        return response.data.prescriptionData;
+    }catch(err){
+        return rejectWithValue(err.response.data);
+    }
 });
 
 //================== Get Prescription ==============
-export const getPrescription = createAsyncThunk('prescription/get',async (data,{getState})=>{
+export const getPrescription = createAsyncThunk('prescription/get',async (data,{getState,rejectWithValue})=>{
     console.log(data,"reducer");
     const {id , date , user_id } = data;
     const state = getState();
-    const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/medicine/prescription?id=${id}&date=${date}&user_id=${user_id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` }});
-    return response.data.prescription;
+    try{
+        const userInfo = state.userLogin.data;
+        const response = await Axios.get(`/medicine/prescription?id=${id}&date=${date}&user_id=${user_id}`,{ headers : { authorization : `Bearer ${userInfo.authToken}` }});
+        return response.data.prescription;
+    }catch(err){
+        return rejectWithValue(err.response.data);
+    }
 });
 
 //====================== prescription slice ================
@@ -45,7 +52,7 @@ const prescriptionReducer = createSlice({
         },
         [getPrescription.rejected] : (state,action) => {
             state.loading = false;
-            state.error = 'No Prescription found';
+            state.error = action.payload.message;
         },
         [addPrescription.fulfilled] : (state,action) => {
             state.prescription = action.payload;
@@ -57,7 +64,7 @@ const prescriptionReducer = createSlice({
         },
         [ addPrescription.rejected ] : (state,action) => {
             state.loading = false;
-            state.error = 'Cannot add Prescription';
+            state.error = action.payload.message;
         }
     }
 });

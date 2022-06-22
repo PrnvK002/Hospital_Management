@@ -44,49 +44,35 @@ const Footer = () => {
 
             <div className='col-md-2 col-lg-2 col-xl-2 mx-auto mb-4'>
               <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
-              <p>
-                <p className='text-reset'>
+              <p>                
                   Angular
-                </p>
               </p>
               <p>
-                <p className='text-reset'>
+         
                   React
-                </p>
+
               </p>
               <p>
-                <p className='text-reset'>
                   Vue
-                </p>
               </p>
               <p>
-                <p className='text-reset'>
                   Laravel
-                </p>
               </p>
             </div>
 
             <div className='col-md-3 col-lg-2 col-xl-2 mx-auto mb-4'>
               <h6 className='text-uppercase fw-bold mb-4'>Useful links</h6>
               <p>
-                <p className='text-reset'>
                   Pricing
-                </p>
               </p>
               <p>
-                <p className='text-reset'>
                   Settings
-                </p>
               </p>
               <p>
-                <p className='text-reset'>
                   Orders
-                </p>
               </p>
               <p>
-                <p className='text-reset'>
                   Help
-                </p>
               </p>
             </div>
 

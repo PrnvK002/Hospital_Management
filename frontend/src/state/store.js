@@ -20,5 +20,6 @@ export const store = configureStore({
         chats : chatReducer,
         medicineData : medicineReducer,
         prescriptionData : prescriptionReducer
-    }
+    },
+    devTools : false
 });  

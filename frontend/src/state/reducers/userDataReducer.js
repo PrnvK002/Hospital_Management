@@ -5,16 +5,20 @@ import Axios from "../../axios";
 
 export const getUsersData = createAsyncThunk(
   "admin/users",
-  async (conditions, { getState }) => {
+  async (conditions, { getState , rejectWithValue }) => {
     const { role, page } = conditions;
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/users/${role}/${page}`, {
-      headers: {
-        authorization: `Bearer ${userInfo.authToken}`,
-      },
-    });
-    return response.data.user;
+    try{
+      const response = await Axios.get(`/users/${role}/${page}`, {
+        headers: {
+          authorization: `Bearer ${userInfo.authToken}`,
+        },
+      });
+      return response.data.user;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -22,17 +26,21 @@ export const getUsersData = createAsyncThunk(
 
 export const addUserData = createAsyncThunk(
   "admin/users/add",
-  async (data, { getState }) => {
+  async (data, { getState , rejectWithValue }) => {
     console.log(data);
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.post("/user", data, {
-      headers: {
-        authorization: `Bearer ${userInfo.authToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data.status;
+    try{
+      const response = await Axios.post("/user", data, {
+        headers: {
+          authorization: `Bearer ${userInfo.authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data.status;
+    }catch(err){
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -40,13 +48,17 @@ export const addUserData = createAsyncThunk(
 
 export const getDoctorsOfDepartments = createAsyncThunk(
   "users/department",
-  async (id, { getState }) => {
+  async (id, { getState,rejectWithValue }) => {
     const state = getState();
     const userInfo = state.userLogin.data;
-    const response = await Axios.get(`/getDoctors/${id}`, {
-      headers: { authorization: `Bearer ${userInfo.authToken}` },
-    });
-    return response.data.doctors;
+    try{
+      const response = await Axios.get(`/getDoctors/${id}`, {
+        headers: { authorization: `Bearer ${userInfo.authToken}` },
+      });
+      return response.data.doctors;
+    }catch(err){
+      return rejectWithValue(err.response.data)
+    }
   }
 );
 
@@ -84,7 +96,7 @@ const usersDataReducer = createSlice({
     [getUsersData.rejected]: (state, action) => {
       console.log(action);
       state.loading = false;
-      state.error = "Error occured While getting users Data";
+      state.error = action.payload.message;
     },
     [addUserData.fulfilled]: (state, action) => {
       console.log(action);
@@ -99,7 +111,7 @@ const usersDataReducer = createSlice({
     [addUserData.rejected]: (state, action) => {
       console.error(action);
       state.loading = false;
-      state.error = "An error occured while addUser";
+      state.error = action.payload.message;
     },
     [getDoctorsOfDepartments.fulfilled]: (state, action) => {
       state.loading = false;
@@ -110,7 +122,7 @@ const usersDataReducer = createSlice({
       state.loading = true;
     },
     [getDoctorsOfDepartments.rejected]: (state, action) => {
-      state.error = "Cannot get doctors data";
+      state.error = action.payload.message;
       state.loading = false;
     },
     logout: (state, action) => {
